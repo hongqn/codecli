@@ -4,6 +4,8 @@ Command Line Tools for CODE
 
 这是一个方便使用 `code`_ 进行合作开发的工具。
 
+.. _code: http://code.dapps.douban.com
+
 Install
 =======
 
