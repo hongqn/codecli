@@ -2,6 +2,8 @@ from commands import getoutput
 from subprocess import check_call
 import webbrowser
 
+from codecli.utils import get_current_branch_name, merge_with_master
+
 def populate_argument_parser(parser):
     pass
 
@@ -11,19 +13,6 @@ def main(args):
     merge_with_master(branch)
     push_to_my_fork(branch)
     send_pullreq(branch)
-
-
-def get_current_branch_name():
-    output = getoutput('git symbolic-ref HEAD')
-    assert output.startswith('refs/heads/')
-    return output[len('refs/heads/'):]
-
-
-def merge_with_master(branch):
-    check_call('git checkout master', shell=True)
-    check_call('git pull upstream master', shell=True)
-    check_call('git checkout %s' % branch, shell=True)
-    check_call('git merge master', shell=True)
 
 
 def push_to_my_fork(branch):

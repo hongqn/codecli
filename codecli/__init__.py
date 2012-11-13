@@ -11,6 +11,7 @@ def main():
     subcommands = [
         ('fork', 'fork', "Create a fork"),
         ('start', 'start', "Start a new feature/bugfix branch"),
+        ('sync', 'sync', "Sync branch with master"),
         ('pullreq', 'pullreq', "Send a pull request"),
     ]
 

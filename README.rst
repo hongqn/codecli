@@ -30,14 +30,27 @@ Usage
     $ cd repo
     $ git remote add upstream http://code.dapps.douban.com/repo.git
 
-开始一个分支::
+开始一个分支
+~~~~~~~~~~~~
 
-    code start {branch-name}
+::
 
-  会自动从最新的master创建分支。
+  code start {branch-name}
 
-提交pull request::
+会自动从最新的master创建分支。
+
+与master同步
+~~~~~~~~~~~~
+
+::
+
+  code sync
+
+提交pull request
+~~~~~~~~~~~~~~~~
+
+::
 
     code pullreq
 
-  会自动merge master然后打开浏览器直达创建pull request页面。
+会自动merge master然后打开浏览器直达创建pull request页面。
