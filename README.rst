@@ -11,7 +11,7 @@ Install
 
 全局安装::
 
-  sudo pip install -e http://code.dapps.douban.com/codecli.git#egg=codecli
+  sudo pip install -e git+http://code.dapps.douban.com/codecli.git#egg=codecli
 
 或者安装在 $HOME/.local 下::
 
