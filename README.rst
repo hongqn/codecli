@@ -24,11 +24,18 @@ Usage
 从一个现有仓库 fork 一份（这部分目前只能手工操作，等code提供fork api后可自动进
 行）:
 
-  先在code页面上创建fork，然后::
 
-    $ git clone http://code.dapps.douban.com/repo_yourname.git repo
-    $ cd repo
-    $ git remote add upstream http://code.dapps.douban.com/repo.git
+创建本地clone
+~~~~~~~~~~~~~~
+
+::
+
+    $ code fork {repo} {your_fork} {dir}
+    $ cd dir
+
+其中，repo 和 your_fork 只需要填写在 code 上的项目名即可，例如::
+
+    $ code fork dae dae_hongqn dae
 
 开始一个分支
 ~~~~~~~~~~~~
