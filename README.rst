@@ -15,7 +15,7 @@ Install
 
 或者安装在 $HOME/.local 下::
 
-  pip install --user -e http://code.dapps.douban.com/codecli.git#egg=codecli
+  pip install --user -e git+http://code.dapps.douban.com/codecli.git#egg=codecli
   # add $HOME/.local/bin to your $PATH
 
 Usage
