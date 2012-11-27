@@ -13,6 +13,7 @@ def main():
         ('start', 'start', "Start a new feature/bugfix branch"),
         ('sync', 'sync', "Sync branch with master"),
         ('pullreq', 'pullreq', "Send a pull request"),
+        ('hotfix', 'hotfix', "Make a hotfix for branch other than master"),
     ]
 
     for command, module_name, help_text in subcommands:
