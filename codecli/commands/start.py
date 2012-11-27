@@ -1,4 +1,4 @@
-from subprocess import check_call
+from codecli.utils import check_call
 
 def populate_argument_parser(parser):
     parser.add_argument('branch')

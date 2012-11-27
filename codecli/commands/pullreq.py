@@ -1,8 +1,8 @@
 from commands import getoutput
-from subprocess import check_call
 import webbrowser
 
-from codecli.utils import get_current_branch_name, merge_with_master
+from codecli.utils import get_current_branch_name, merge_with_master, \
+        check_call
 
 def populate_argument_parser(parser):
     pass

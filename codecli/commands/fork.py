@@ -1,7 +1,8 @@
 import os
-from subprocess import check_call
 from contextlib import contextmanager
 from getpass import getuser
+
+from codecli.utils import check_call
 
 def populate_argument_parser(parser):
     username = getuser()
