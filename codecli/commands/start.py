@@ -5,7 +5,7 @@ def populate_argument_parser(parser):
 
 
 def main(args):
-    branch = args.branch
+    branch = args.feature
 
     check_call('git checkout master', shell=True)
     check_call('git pull upstream master', shell=True)
