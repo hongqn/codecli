@@ -7,6 +7,6 @@ def populate_argument_parser(parser):
 
 
 def main(args):
-    branch_name = 'hotfix-%s-%s' % (args.branch, args.issue)
+    branch_name = 'hotfix-%s-%s' % (args.start_point, args.issue)
     check_call(['git', 'fetch', 'upstream'])
     check_call(['git', 'checkout', '-b', branch_name, 'upstream/'+args.start_point])
