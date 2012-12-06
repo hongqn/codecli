@@ -11,12 +11,15 @@ def get_current_branch_name():
     assert output.startswith('refs/heads/')
     return output[len('refs/heads/'):]
 
+def get_base_branch(branch):
+    if branch.startswith('hotfix-'):
+        return branch.split('-')[1]
+    return 'master'
 
-def merge_with_master(branch):
-    check_call('git checkout master', shell=True)
-    check_call('git pull upstream master', shell=True)
-    check_call('git checkout %s' % branch, shell=True)
-    check_call('git merge master', shell=True)
+def merge_with_base(branch):
+    base = get_base_branch(branch)
+    check_call(['git', 'fetch', 'upstream'])
+    check_call(['git', 'merge', 'upstream/%s' % base])
 
 
 def check_call(cmd, *args, **kwargs):
