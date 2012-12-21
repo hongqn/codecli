@@ -25,6 +25,6 @@ def send_pullreq(branch):
     assert giturl.startswith('http://code.dapps.douban.com/')
     assert giturl.endswith('.git')
     repo = giturl.split('/')[-1][:-4]
-    url = 'http://code.dapps.douban.com/%s/pull/new?head_ref=%s&base_ref=%s' \
+    url = 'http://code.dapps.douban.com/%s/newpull/new?head_ref=%s&base_ref=%s' \
             % (repo, branch, base)
     webbrowser.open(url)
