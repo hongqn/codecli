@@ -24,5 +24,9 @@ def merge_with_base(branch):
 
 def check_call(cmd, *args, **kwargs):
     cmdstr = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
-    print GREEN + ">> " + cmdstr + RESET
+    print_log(cmdstr)
     return _check_call(cmd, *args, **kwargs)
+
+def print_log(outstr):
+    print GREEN + ">> " + outstr + RESET
+

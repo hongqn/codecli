@@ -1,4 +1,5 @@
 from commands import getoutput
+from codecli.utils import print_log
 import webbrowser
 
 from codecli.utils import get_current_branch_name, merge_with_base, \
@@ -27,4 +28,5 @@ def send_pullreq(branch):
     repo = giturl.split('/')[-1][:-4]
     url = 'http://code.dapps.douban.com/%s/newpull/new?head_ref=%s&base_ref=%s' \
             % (repo, branch, base)
+    print_log("goto " + url)
     webbrowser.open(url)
