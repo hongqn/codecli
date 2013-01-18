@@ -7,6 +7,6 @@ def populate_argument_parser(parser):
 def main(args):
     branch = args.feature
 
-    check_call('git checkout master', shell=True)
-    check_call('git pull upstream master', shell=True)
-    check_call('git checkout -b %s' % branch, shell=True)
+    check_call(['git', 'fetch', 'upstream'])
+    check_call(['git', 'checkout', '-b', branch, 'upstream/master'])
+    check_call(['git', 'branch', '--set-upstream-to', 'origin/%s' % branch])
