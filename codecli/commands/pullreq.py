@@ -16,7 +16,7 @@ def main(args):
 
 
 def push_to_my_fork(branch):
-    check_call('git push origin %s' % branch, shell=True)
+    check_call('git push --set-upstream origin %s' % branch, shell=True)
 
 
 def send_pullreq(branch):
