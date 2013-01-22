@@ -8,4 +8,4 @@ def main(args):
     branch = args.feature
 
     check_call(['git', 'fetch', 'upstream'])
-    check_call(['git', 'checkout', '-b', branch, 'upstream/master'])
+    check_call(['git', 'checkout', '-b', branch, '--no-track', 'upstream/master'])
