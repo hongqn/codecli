@@ -37,21 +37,24 @@ Usage
 
     $ code fork dae dae_hongqn dae
 
+
 开始一个分支
 ~~~~~~~~~~~~
 
 ::
 
-  code start {branch-name}
+    code start {branch-name}
 
-会自动从最新的master创建分支。
+会自动从最新的upstream/master创建分支。
 
-与master同步
-~~~~~~~~~~~~
+
+与upstream/master同步
+~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-  code sync
+    code sync
+
 
 提交pull request
 ~~~~~~~~~~~~~~~~
@@ -61,3 +64,14 @@ Usage
     code pullreq
 
 会自动merge master然后打开浏览器直达创建pull request页面。
+
+
+从非master分支进行hotfix
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    code hotfix {release-branch-name} {hotfix-name}
+
+会从 upstream/{release-branch-name} 创建分支，起名为hotfix-{release-branch-name}-{hotfix-name} 。当执行 ``code pullreq`` 时，会自动将目标分支指向 {release-branch-name} 。
+
