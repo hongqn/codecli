@@ -29,4 +29,3 @@ def check_call(cmd, *args, **kwargs):
 
 def print_log(outstr):
     print GREEN + ">> " + outstr + RESET
-

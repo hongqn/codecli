@@ -1,0 +1,3 @@
+*.py[c|o]
+.*.swp
+*.egg-info/
