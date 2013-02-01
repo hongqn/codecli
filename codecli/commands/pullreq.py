@@ -1,3 +1,4 @@
+import sys
 from commands import getoutput
 from codecli.utils import print_log
 import webbrowser
@@ -11,6 +12,9 @@ def populate_argument_parser(parser):
 
 def main(args):
     branch = get_current_branch_name()
+    if branch == 'master':
+        print_log('Pull request should never be from master')
+        sys.exit(1)
     merge_with_base(branch)
     push_to_my_fork(branch)
     send_pullreq(branch)
