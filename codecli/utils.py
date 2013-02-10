@@ -6,15 +6,18 @@ from subprocess import check_call as _check_call
 GREEN = '\x1b[1;32m'
 RESET = '\x1b[0m'
 
+
 def get_current_branch_name():
     output = getoutput('git symbolic-ref HEAD')
     assert output.startswith('refs/heads/')
     return output[len('refs/heads/'):]
 
+
 def get_base_branch(branch):
     if branch.startswith('hotfix-'):
         return branch.split('-')[1]
     return 'master'
+
 
 def merge_with_base(branch):
     base = get_base_branch(branch)
@@ -26,6 +29,7 @@ def check_call(cmd, *args, **kwargs):
     cmdstr = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
     print_log(cmdstr)
     return _check_call(cmd, *args, **kwargs)
+
 
 def print_log(outstr):
     print GREEN + ">> " + outstr + RESET

@@ -4,6 +4,7 @@ from getpass import getuser
 
 from codecli.utils import check_call
 
+
 def populate_argument_parser(parser):
     username = os.environ.get('GIT_AUTHOR_NAME', getuser())
     parser.add_argument('upstream', help="name of upstream repo [e.g. dae]")
@@ -21,6 +22,7 @@ def main(args):
         check_call(['git', 'config', 'user.email',
                     '%s@douban.com' % args.username.lower()])
         check_call(['git', 'config', 'user.name', args.username])
+
 
 def git_url(repo_name):
     return 'http://code.dapps.douban.com/%s.git' % repo_name
