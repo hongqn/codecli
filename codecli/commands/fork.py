@@ -2,7 +2,7 @@ import os
 from contextlib import contextmanager
 from getpass import getuser
 
-from codecli.utils import check_call
+from codecli.utils import check_call, set_track_upstream_pullrequest_branch
 
 
 def populate_argument_parser(parser):
@@ -22,6 +22,7 @@ def main(args):
         check_call(['git', 'config', 'user.email',
                     '%s@douban.com' % args.username.lower()])
         check_call(['git', 'config', 'user.name', args.username])
+        set_track_upstream_pullrequest_branch()
 
 
 def git_url(repo_name):

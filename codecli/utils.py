@@ -25,6 +25,12 @@ def merge_with_base(branch):
     check_call(['git', 'merge', 'upstream/%s' % base])
 
 
+def set_track_upstream_pullrequest_branch():
+    command = ('git config --add remote.upstream.fetch '
+               '+refs/pull/*/head:refs/remotes/upstream/pr/*')
+    check_call(command.split())
+
+
 def check_call(cmd, *args, **kwargs):
     cmdstr = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
     print_log(cmdstr)
