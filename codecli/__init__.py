@@ -3,6 +3,7 @@
 import sys
 import logging
 
+
 def main():
     from argparse import ArgumentParser
     parser = ArgumentParser()
@@ -21,7 +22,8 @@ def main():
             module = __import__('codecli.commands.' + module_name, globals(), locals(),
                                 ['populate_argument_parser', 'main'])
         except ImportError:
-            import traceback; traceback.print_exc()
+            import traceback
+            traceback.print_exc()
             print >>sys.stderr, "Can not import command %s, skip it" % command
             continue
 

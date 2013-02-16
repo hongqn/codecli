@@ -4,7 +4,8 @@ from codecli.utils import print_log
 import webbrowser
 
 from codecli.utils import get_current_branch_name, merge_with_base, \
-        check_call, get_base_branch
+    check_call, get_base_branch
+
 
 def populate_argument_parser(parser):
     pass
