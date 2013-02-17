@@ -16,10 +16,10 @@ def get_base_branch(branch):
         return branch.split('-')[1]
     return 'master'
 
-def merge_with_base(branch):
+def merge_with_base(branch, rebase=False):
     base = get_base_branch(branch)
     check_call(['git', 'fetch', 'upstream'])
-    check_call(['git', 'merge', 'upstream/%s' % base])
+    check_call(['git', 'rebase' if rebase else 'merge', 'upstream/%s' % base])
 
 
 def check_call(cmd, *args, **kwargs):
