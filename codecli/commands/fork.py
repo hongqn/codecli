@@ -2,7 +2,8 @@ import os
 from contextlib import contextmanager
 from getpass import getuser
 
-from codecli.utils import check_call, set_track_upstream_pullrequest_branch
+from codecli.utils import check_call, set_track_upstream_pullrequest_branch, \
+        repo_git_url
 
 
 def populate_argument_parser(parser):
@@ -16,17 +17,13 @@ def populate_argument_parser(parser):
 
 def main(args):
     name = args.upstream
-    check_call(['git', 'clone', git_url(args.origin), args.dir])
+    check_call(['git', 'clone', repo_git_url(args.origin), args.dir])
     with cd(args.dir):
-        check_call(['git', 'remote', 'add', 'upstream', git_url(name)])
+        check_call(['git', 'remote', 'add', 'upstream', repo_git_url(name)])
         check_call(['git', 'config', 'user.email',
                     '%s@douban.com' % args.username.lower()])
         check_call(['git', 'config', 'user.name', args.username])
         set_track_upstream_pullrequest_branch()
-
-
-def git_url(repo_name):
-    return 'http://code.dapps.douban.com/%s.git' % repo_name
 
 
 @contextmanager

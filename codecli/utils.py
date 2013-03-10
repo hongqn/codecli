@@ -38,3 +38,8 @@ def check_call(cmd, *args, **kwargs):
 
 def print_log(outstr):
     print GREEN + ">> " + outstr + RESET
+
+
+def repo_git_url(repo_name):
+    return 'http://code.dapps.douban.com/%s.git' % repo_name
+
