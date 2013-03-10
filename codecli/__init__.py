@@ -10,6 +10,7 @@ def main():
     subparsers = parser.add_subparsers(title="commands",
                                        dest="subparser_command")
     subcommands = [
+        ('clone', 'clone', "Clone a repository to local"),
         ('fork', 'fork', "Create a fork"),
         ('start', 'start', "Start a new feature/bugfix branch"),
         ('sync', 'sync', "Sync branch with master"),
