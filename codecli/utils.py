@@ -1,7 +1,9 @@
 from __future__ import absolute_import
 
+import os
 from commands import getoutput
 from subprocess import check_call as _check_call
+from contextlib import contextmanager
 
 GREEN = '\x1b[1;32m'
 RESET = '\x1b[0m'
@@ -43,3 +45,12 @@ def print_log(outstr):
 def repo_git_url(repo_name):
     return 'http://code.dapps.douban.com/%s.git' % repo_name
 
+
+@contextmanager
+def cd(path):
+    cwd = os.getcwd()
+    os.chdir(path)
+    try:
+        yield cwd
+    finally:
+        os.chdir(cwd)

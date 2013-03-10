@@ -1,9 +1,8 @@
 import os
-from contextlib import contextmanager
 from getpass import getuser
 
 from codecli.utils import check_call, set_track_upstream_pullrequest_branch, \
-        repo_git_url
+        repo_git_url, cd
 
 
 def populate_argument_parser(parser):
@@ -25,12 +24,3 @@ def main(args):
         check_call(['git', 'config', 'user.name', args.username])
         set_track_upstream_pullrequest_branch()
 
-
-@contextmanager
-def cd(path):
-    cwd = os.getcwd()
-    os.chdir(path)
-    try:
-        yield cwd
-    finally:
-        os.chdir(cwd)
