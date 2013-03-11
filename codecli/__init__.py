@@ -14,6 +14,7 @@ def main():
         ('start', 'start', "Start a new feature/bugfix branch"),
         ('sync', 'sync', "Sync branch with master"),
         ('pullreq', 'pullreq', "Send a pull request"),
+        ('pr', 'pullreq', "Alias of pullreq"),
         ('hotfix', 'hotfix', "Make a hotfix for branch other than master"),
         ('clone', 'clone', "Clone a repository to local"),
         ('fetch', 'fetch', "Set remote and fetch other user's fork"),
