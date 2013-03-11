@@ -26,3 +26,6 @@ def main(args):
                     '%s@douban.com' % args.username.lower()])
         check_call(['git', 'config', 'user.name', args.username])
 
+        # set upstream to origin to make other code commands work
+        check_call(['git', 'remote', 'add', 'upstream', repo_git_url(args.repo)])
+
