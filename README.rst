@@ -9,14 +9,12 @@ Command Line Tools for CODE
 Install
 =======
 
-全局安装::
+使用 virtualenv::
 
-  sudo pip install -e git+http://code.dapps.douban.com/codecli.git#egg=codecli
-
-或者安装在 $HOME/.local 下::
-
-  pip install --user -e git+http://code.dapps.douban.com/codecli.git#egg=codecli
-  # add $HOME/.local/bin to your $PATH
+  $ virtualenv codecli
+  $ codecli/bin/pip install -e git+http://code.dapps.douban.com/codecli.git#egg=codecli
+  $ ln -s `pwd`/codecli/bin/code $HOME/bin/
+  # make sure add $HOME/bin to your $PATH
 
 Usage
 =====
