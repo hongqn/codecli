@@ -18,6 +18,7 @@ def main():
         ('hotfix', 'hotfix', "Make a hotfix for branch other than master"),
         ('clone', 'clone', "Clone a repository to local"),
         ('fetch', 'fetch', "Set remote and fetch other user's fork"),
+        ('end', 'end', "Delete branch from origin"),
     ]
 
     for command, module_name, help_text in subcommands:
