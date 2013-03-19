@@ -172,8 +172,9 @@ end 分支的开发
     git br -d {branchname}
     git push origin :{branchname}
 
+
 让code与git命令结合更紧密
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 在使用codecli的时候，经常会出现一会使用code命令一会使用git命令的情况，为了让两个命令结合更紧密，你可以配置一下~/.gitconfig，参考配置如下::
 
