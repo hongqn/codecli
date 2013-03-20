@@ -4,6 +4,7 @@ import os
 from commands import getoutput
 from subprocess import check_call as _check_call
 from contextlib import contextmanager
+from getpass import getuser
 
 GREEN = '\x1b[1;32m'
 RESET = '\x1b[0m'
@@ -48,3 +49,41 @@ def cd(path):
         yield cwd
     finally:
         os.chdir(cwd)
+
+
+def input(prompt):
+    return raw_input(GREEN + prompt + RESET)
+
+
+def merge_config():
+    """merge all config in ~/.codecli.conf to current git repo's config.
+
+    Will prompt for email and name if they do not exist in ~/.codecli.conf.
+
+    """
+    path = os.path.expanduser('~/.codecli.conf')
+
+    email = getoutput('git config -f "%s" user.email' % path).strip()
+    if not email:
+        email = getoutput('git config user.email').strip()
+        if not email.endswith('@douban.com'):
+            email = '%s@douban.com' % getuser()
+        email = input("Please enter your @douban.com email [%s]: " % email
+                     ) or email
+        check_call(['git', 'config', '-f', path, 'user.email', email])
+
+    name = getoutput('git config -f "%s" user.name' % path).strip()
+    if not name:
+        name = getoutput('git config user.name').strip()
+        if not name:
+            name = email.split('@')[0]
+        name = input("Please enter your name [%s]: " % name) or name
+        check_call(['git', 'config', '-f', path, 'user.name', name])
+
+    for line in getoutput('git config -f "%s" --list' % path).splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        key, value = line.split('=', 1)
+        check_call(['git', 'config', key, value])

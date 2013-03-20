@@ -1,15 +1,9 @@
-import os
-from getpass import getuser
-
-from codecli.utils import check_call, repo_git_url, cd
+from codecli.utils import check_call, repo_git_url, cd, merge_config
 
 
 def populate_argument_parser(parser):
     parser.add_argument('repo', help="name of repo [e.g. dae]")
     parser.add_argument('dir', nargs='?', help="directory to clone to")
-    username = os.environ.get('GIT_AUTHOR_NAME', getuser())
-    parser.add_argument('--username', default=username,
-                        help="douban unified account name [default: %(default)s]")
 
 
 def main(args):
@@ -22,9 +16,7 @@ def main(args):
     check_call(cmd)
 
     with cd(dir):
-        check_call(['git', 'config', 'user.email',
-                    '%s@douban.com' % args.username.lower()])
-        check_call(['git', 'config', 'user.name', args.username])
+        merge_config()
 
         # set upstream to origin to make other code commands work
         check_call(['git', 'remote', 'add', 'upstream', repo_git_url(args.repo)])

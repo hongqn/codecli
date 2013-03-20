@@ -47,10 +47,10 @@ remote ，在 codecli 的其他命令中，会默认这两个 remote 均存在�
 你自己的fork， ``upstream`` 指向上游仓库（即你希望贡献代码的仓库）。对于使用
 ``code clone`` 的仓库而言， ``origin`` 和 ``upstream`` 均指向你自己的仓库。
 
-同时， codecli 还会设置 user.email 为 ``你的当前登录名@douban.com`` 。如果你的
-当前登录名不是你的豆瓣邮箱名，可以用 ``--username`` 参数或者
-``GIT_AUTHOR_NAME`` 环境变量设置。推荐在 .bashrc 或 .zshrc 中配置好
-``GIT_AUTHOR_NAME`` ，以避免每次都需要使用 ``--username`` 参数。
+同时， codecli 还会设置 user.email 和 user.name ，并保存在 ~/.codecli.conf 中
+。之后每次使用 codecli 创建本地仓库时，都会自动从 ~/.codecli.conf 中读取之前保
+存的用户信息。
+
 
 开始一个分支
 ~~~~~~~~~~~~
