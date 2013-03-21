@@ -107,6 +107,9 @@ rebase -i`` 清理一下提交，squash 无意义的 oops 或者 tmpsav 之类�
 
 如果是 hotfix 分支， 也会设置正确的目标分支 （比如 ``release`` ）
 
+加 ``-t`` 参数可以给其他人的 fork 提交 pull request 。
+
+
 从非master分支进行hotfix
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -143,6 +146,7 @@ checkout 到某个 pullreq
 
 抓取指定 pullreq 并自动 checkout 到它的代码。 
 
+用 ``-t`` 参数可以 checkout 到某个用户的 fork 上的 pull request 。
 
 fetch 其他人的 fork
 ~~~~~~~~~~~~~~~~~~~
