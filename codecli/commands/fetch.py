@@ -13,18 +13,28 @@ def main(args):
 
 
 def add_remote(username):
+    user_git_url = origin_git_url = None
+
     output = getoutput('git remote -v')
     for line in output.splitlines():
         words = line.split()
         if words[0] == 'origin':
-            git_url = words[1]
-            break
-    else:
-        return "No origin remote found, abort"
+            origin_git_url = words[1]
+        if words[0] == username:
+            user_git_url = words[1]
 
-    repo = git_url.rsplit('/', 1)[-1].rsplit('.', 1)[0]
+    if not origin_git_url:
+        raise Exception("No origin remote found, abort")
+
+    repo = origin_git_url.rsplit('/', 1)[-1].rsplit('.', 1)[0]
     remote_name = username
     remote_url = repo_git_url('%s/%s' % (username, repo))
+
+    if user_git_url:
+        if user_git_url != remote_url:
+            raise Exception("remote %s already exists, delete it first?")
+        # already added
+        return
 
     check_call(['git', 'remote', 'add', remote_name, remote_url])
 
