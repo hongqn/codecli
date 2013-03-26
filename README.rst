@@ -189,3 +189,13 @@ end 分支的开发
     pr = !code pr
     sync = !code sync
     end = !code end
+
+
+
+ChangeLog
+=========
+
+2013-03-26
+----------
+
+* 不使用 ``commands.getoutput`` ，以支持windows
