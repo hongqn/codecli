@@ -1,5 +1,4 @@
-from commands import getoutput
-from codecli.utils import check_call, repo_git_url
+from codecli.utils import check_call, repo_git_url, getoutput
 
 
 def populate_argument_parser(parser):
@@ -15,7 +14,7 @@ def main(args):
 def add_remote(username):
     user_git_url = origin_git_url = None
 
-    output = getoutput('git remote -v')
+    output = getoutput(['git', 'remote', '-v'])
     for line in output.splitlines():
         words = line.split()
         if words[0] == 'origin':

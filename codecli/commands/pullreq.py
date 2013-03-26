@@ -1,7 +1,6 @@
-from commands import getoutput
 import webbrowser
 
-from codecli.utils import print_log
+from codecli.utils import print_log, getoutput
 import codecli.commands.fetch
 from codecli.utils import get_current_branch_name, merge_with_base, \
     check_call, get_base_branch
@@ -59,7 +58,7 @@ def send_pullreq(branch, target='upstream'):
 
 
 def get_remote_repo_url(remote):
-    for line in getoutput("git remote -v").splitlines():
+    for line in getoutput(['git', 'remote', '-v']).splitlines():
         words = line.split()
         if words[0] == remote and words[-1] == '(push)':
             giturl = words[1]

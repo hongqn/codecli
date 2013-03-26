@@ -1,8 +1,7 @@
 from __future__ import absolute_import
 
 import os
-from commands import getoutput
-from subprocess import check_call as _check_call
+from subprocess import check_call as _check_call, Popen, PIPE
 from contextlib import contextmanager
 from getpass import getuser
 
@@ -11,7 +10,7 @@ RESET = '\x1b[0m'
 
 
 def get_current_branch_name():
-    output = getoutput('git symbolic-ref HEAD')
+    output = getoutput(['git', 'symbolic-ref', 'HEAD'])
     assert output.startswith('refs/heads/')
     return output[len('refs/heads/'):]
 
@@ -64,27 +63,32 @@ def merge_config():
     """
     path = os.path.expanduser('~/.codecli.conf')
 
-    email = getoutput('git config -f "%s" user.email' % path).strip()
+    email = getoutput(['git', 'config', '-f', path, 'user.email']).strip()
     if not email:
-        email = getoutput('git config user.email').strip()
+        email = getoutput(['git', 'config', 'user.email']).strip()
         if not email.endswith('@douban.com'):
             email = '%s@douban.com' % getuser()
         email = input("Please enter your @douban.com email [%s]: " % email
                      ) or email
         check_call(['git', 'config', '-f', path, 'user.email', email])
 
-    name = getoutput('git config -f "%s" user.name' % path).strip()
+    name = getoutput(['git', 'config', '-f', path, 'user.name']).strip()
     if not name:
-        name = getoutput('git config user.name').strip()
+        name = getoutput(['git', 'config', 'user.name']).strip()
         if not name:
             name = email.split('@')[0]
         name = input("Please enter your name [%s]: " % name) or name
         check_call(['git', 'config', '-f', path, 'user.name', name])
 
-    for line in getoutput('git config -f "%s" --list' % path).splitlines():
+    for line in getoutput(['git', 'config', '-f', path, '--list']).splitlines():
         line = line.strip()
         if not line:
             continue
 
         key, value = line.split('=', 1)
         check_call(['git', 'config', key, value])
+
+
+def getoutput(cmd):
+    stdout, stderr = Popen(cmd, stdout=PIPE).communicate()
+    return stdout
