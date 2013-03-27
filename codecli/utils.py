@@ -91,4 +91,4 @@ def merge_config():
 
 def getoutput(cmd):
     stdout, stderr = Popen(cmd, stdout=PIPE).communicate()
-    return stdout
+    return stdout[:-1] if stdout[-1:] == '\n' else stdout
