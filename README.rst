@@ -196,6 +196,6 @@ ChangeLog
 =========
 
 2013-03-26
-----------
+~~~~~~~~~~
 
 * 不使用 ``commands.getoutput`` ，以支持windows
