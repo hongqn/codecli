@@ -92,3 +92,7 @@ def merge_config():
 def getoutput(cmd):
     stdout, stderr = Popen(cmd, stdout=PIPE).communicate()
     return stdout[:-1] if stdout[-1:] == '\n' else stdout
+
+
+def get_branches():
+    return [x.split()[-1] for x in getoutput(['git', 'branch']).splitlines()]
