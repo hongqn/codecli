@@ -12,7 +12,8 @@ def main(args):
     existing_branches = get_branches()
     if branch in existing_branches:
         while True:
-            answer = input("Branch %s exists, (s)witch to it or re(c)reate it? (S/c) ")
+            answer = input("Branch %s exists, (s)witch to it or re(c)reate "
+                           "it?  (S/c) " % branch)
             answer = answer.lower()[0] if answer else 's'
 
             if answer == 's':
