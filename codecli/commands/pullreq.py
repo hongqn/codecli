@@ -12,6 +12,8 @@ def populate_argument_parser(parser):
                         "(default: submit a new pullreq)")
     parser.add_argument('-t', '--target', metavar='USER',
                         help="act on a user's fork")
+    parser.add_argument('-n', '--nomerge', action='store_true',
+                        help="submit pullreq without merge with upstream")
 
 
 def main(args):
@@ -23,7 +25,7 @@ def main(args):
     if args.pr_id:
         return fetch_and_switch_to_pr(args.pr_id, target=target)
     else:
-        return submit_new_pullreq(target=target)
+        return submit_new_pullreq(target=target, no_merge=args.nomerge)
 
 def fetch_and_switch_to_pr(pr_id, target='upstream'):
     check_call(['git', 'fetch', target,
@@ -32,13 +34,14 @@ def fetch_and_switch_to_pr(pr_id, target='upstream'):
                ])
     check_call(['git', 'checkout', '{0}/pr/{1}'.format(target, pr_id)])
 
-def submit_new_pullreq(target='upstream'):
+def submit_new_pullreq(target='upstream', no_merge=False):
     branch = get_current_branch_name()
     if branch == 'master':
         print_log('Pull request should never be from master')
         return 1
 
-    merge_with_base(branch, remote=target)
+    if not no_merge:
+        merge_with_base(branch, remote=target)
     push_to_my_fork(branch)
     send_pullreq(branch, target=target)
 
