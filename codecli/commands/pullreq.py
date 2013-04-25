@@ -1,3 +1,4 @@
+import re
 import webbrowser
 
 from codecli.utils import print_log, getoutput
@@ -69,8 +70,8 @@ def get_remote_repo_url(remote):
     else:
         raise Exception("no remote %s found" % remote)
 
-    assert giturl.startswith('http://code.dapps.douban.com/')
-    assert giturl.endswith('.git')
+    giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
+    assert re.match(r"^http://code.dapps.douban.com/.+\.git$", giturl)
     repourl = giturl[: -len('.git')]
     return repourl
 
