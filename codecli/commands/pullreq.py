@@ -1,10 +1,12 @@
-import re
 import webbrowser
 
-from codecli.utils import print_log, getoutput
+from codecli.utils import print_log
 import codecli.commands.fetch
+from codecli.commands.start import start
 from codecli.utils import get_current_branch_name, merge_with_base, \
-    check_call, get_base_branch
+        check_call, get_base_branch, get_remote_repo_name, get_remote_repo_url, \
+        remote_and_pr_id_from_pr_branch
+from codecli.apic import get_pullinfo
 
 
 def populate_argument_parser(parser):
@@ -24,16 +26,18 @@ def main(args):
     target = args.target or 'upstream'
 
     if args.pr_id:
-        return fetch_and_switch_to_pr(args.pr_id, target=target)
+        return fetch_and_switch_to_pr(args.pr_id, remote=target)
     else:
         return submit_new_pullreq(target=target, no_merge=args.nomerge)
 
-def fetch_and_switch_to_pr(pr_id, target='upstream'):
-    check_call(['git', 'fetch', target,
-                '+refs/pull/{0}/head:refs/remotes/{1}/pr/{0}'.format(
-                    pr_id, target),
-               ])
-    check_call(['git', 'checkout', '{0}/pr/{1}'.format(target, pr_id)])
+
+def fetch_and_switch_to_pr(pr_id, remote='upstream'):
+    ref = '{0}/pr/{1}'.format(remote, pr_id)
+    branch = 'pr/{0}'.format(pr_id) if remote == 'upstream' \
+            else 'pr/{0}/{1}'.format(remote, pr_id)
+    fetch_args=['+refs/pull/{0}/head:refs/remotes/{1}'.format(pr_id, ref)]
+    start(branch, remote=remote, fetch_args=fetch_args, base_ref=ref)
+
 
 def submit_new_pullreq(target='upstream', no_merge=False):
     branch = get_current_branch_name()
@@ -52,29 +56,21 @@ def push_to_my_fork(branch):
 
 
 def send_pullreq(branch, target='upstream'):
-    base = get_base_branch(branch)
     repourl = get_remote_repo_url('origin')
-    base_repo = get_remote_repo_name(target)
+    remote, fetch_args, baseref = get_base_branch(branch, remote=target)
+    base_repo = get_remote_repo_name(remote)
+
+    if branch.startswith('pr/'):
+        # for pr-on-pr
+        remote, pr_id = remote_and_pr_id_from_pr_branch(branch)
+        info = get_pullinfo(get_remote_repo_name(remote), pr_id)
+        base_repo = info['head']['repo']['name']
+        baseref = info['head']['ref']
+
     url = '%s/newpull/new?head_ref=%s&base_ref=%s&base_repo=%s' % (
-        repourl, branch, base, base_repo)
+        repourl, branch, baseref, base_repo)
     print_log("goto " + url)
     webbrowser.open(url)
 
 
-def get_remote_repo_url(remote):
-    for line in getoutput(['git', 'remote', '-v']).splitlines():
-        words = line.split()
-        if words[0] == remote and words[-1] == '(push)':
-            giturl = words[1]
-            break
-    else:
-        raise Exception("no remote %s found" % remote)
 
-    giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
-    assert re.match(r"^http://code.dapps.douban.com/.+\.git$", giturl)
-    repourl = giturl[: -len('.git')]
-    return repourl
-
-def get_remote_repo_name(remote):
-    repourl = get_remote_repo_url(remote)
-    return repourl[len('http://code.dapps.douban.com/'):]

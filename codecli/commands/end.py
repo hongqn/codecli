@@ -1,4 +1,4 @@
-from codecli.utils import check_call
+from codecli.utils import check_call, get_branches
 
 
 def populate_argument_parser(parser):
@@ -11,4 +11,9 @@ def main(args):
 
 def end_branch(branch):
     check_call(['git', 'branch', '-d', branch])
-    check_call(['git', 'push', 'origin', ':%s' % branch])
+    if does_branch_exist_on_origin(branch):
+        check_call(['git', 'push', 'origin', ':%s' % branch])
+
+def does_branch_exist_on_origin(branch):
+    branches = get_branches(include_remotes=True)
+    return 'remotes/origin/{0}'.format(branch) in branches

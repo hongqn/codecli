@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import os
+import re
 from subprocess import check_call as _check_call, Popen, PIPE
 from contextlib import contextmanager
 from getpass import getuser
@@ -15,16 +16,36 @@ def get_current_branch_name():
     return output[len('refs/heads/'):]
 
 
-def get_base_branch(branch):
+def remote_and_pr_id_from_pr_branch(branch):
+    assert branch.startswith('pr/')
+    words = branch.split('/', 2)
+    if len(words) == 2:
+        remote, pr_id = 'upstream', words[1]
+    else:
+        remote, pr_id = words[1], words[2]
+    return remote, pr_id
+
+
+def get_base_branch(branch, remote='upstream'):
     if branch.startswith('hotfix-'):
-        return branch.split('-')[1]
-    return 'master'
+        base_branch = branch.split('-')[1]
+        return remote, [], base_branch
+
+    if branch.startswith('pr/'):
+        remote, pr_id = remote_and_pr_id_from_pr_branch(branch)
+        ref = 'pr/{1}'.format(remote, pr_id)
+        fetch_args=['+refs/pull/{0}/head:refs/remotes/{1}/{2}'.format(
+            pr_id, remote, ref)]
+        return remote, fetch_args, ref
+
+    return remote, [], 'master'
+
 
 def merge_with_base(branch, rebase=False, remote='upstream'):
-    base = get_base_branch(branch)
-    check_call(['git', 'fetch', remote])
+    remote, fetch_args, baseref = get_base_branch(branch, remote=remote)
+    check_call(['git', 'fetch', remote] + fetch_args)
     check_call(['git', 'rebase' if rebase else 'merge',
-                '%s/%s' % (remote, base)])
+                '%s/%s' % (remote, baseref)])
 
 
 def check_call(cmd, *args, **kwargs):
@@ -94,5 +115,28 @@ def getoutput(cmd):
     return stdout[:-1] if stdout[-1:] == '\n' else stdout
 
 
-def get_branches():
-    return [x.split()[-1] for x in getoutput(['git', 'branch']).splitlines()]
+def get_branches(include_remotes=False):
+    cmd = ['git', 'branch']
+    if include_remotes:
+        cmd += ['--all']
+
+    return [x[2:].split()[0] for x in getoutput(cmd).splitlines()]
+
+
+def get_remote_repo_url(remote):
+    for line in getoutput(['git', 'remote', '-v']).splitlines():
+        words = line.split()
+        if words[0] == remote and words[-1] == '(push)':
+            giturl = words[1]
+            break
+    else:
+        raise Exception("no remote %s found" % remote)
+
+    giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
+    assert re.match(r"^http://code.dapps.douban.com/.+\.git$", giturl)
+    repourl = giturl[: -len('.git')]
+    return repourl
+
+def get_remote_repo_name(remote):
+    repourl = get_remote_repo_url(remote)
+    return repourl[len('http://code.dapps.douban.com/'):]

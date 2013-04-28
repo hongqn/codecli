@@ -148,6 +148,18 @@ checkout 到某个 pullreq
 
 用 ``-t`` 参数可以 checkout 到某个用户的 fork 上的 pull request 。
 
+在 checkout 到 pullreq 后，如果此 pullreq 还有后续提交，可以使用::
+
+  code sync
+
+命令进行同步。并且还可以在本地编辑代码，提交。然后使用::
+
+  code pr
+
+命令向此 pullreq 的发起仓库的对应分支发起 pullreq 。当发起人 merge 了你的
+pullreq 后，你提交的改动会自动出现在最初的 pullreq 中。
+
+
 fetch 其他人的 fork
 ~~~~~~~~~~~~~~~~~~~
 
@@ -193,7 +205,7 @@ end 分支的开发
 zsh下的code命令补全
 ~~~~~~~~~~~~~~~~~~~
 
-将`_code`复制到`$fpath`中的某个目录重启`zsh`就可以.
+将 ``_code`` 复制到 ``$fpath`` 中的某个目录，重启 zsh 就可以。
 
 
 ChangeLog

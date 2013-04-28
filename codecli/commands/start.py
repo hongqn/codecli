@@ -8,7 +8,10 @@ def populate_argument_parser(parser):
 
 def main(args):
     branch = args.feature
+    start(branch)
 
+
+def start(branch, remote='upstream', fetch_args=[], base_ref='upstream/master'):
     existing_branches = get_branches()
     if branch in existing_branches:
         while True:
@@ -24,5 +27,5 @@ def main(args):
                 end_branch(branch)
                 break
 
-    check_call(['git', 'fetch', 'upstream'])
-    check_call(['git', 'checkout', '-b', branch, '--no-track', 'upstream/master'])
+    check_call(['git', 'fetch', remote] + fetch_args)
+    check_call(['git', 'checkout', '-b', branch, '--no-track', base_ref])
