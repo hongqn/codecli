@@ -190,6 +190,10 @@ end 分支的开发
     sync = !code sync
     end = !code end
 
+zsh下的code命令补全
+~~~~~~~~~~~~~~~~~~~
+
+将`_code`复制到`$fpath`中的某个目录重启`zsh`就可以.
 
 
 ChangeLog

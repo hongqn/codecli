@@ -1,0 +1,26 @@
+#compdef code
+
+_code() {
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+
+    _arguments \
+        '1: :->subcommand'\
+        '*: :->arguments'
+
+    case $state in
+    subcommand)
+        _arguments '1:subcommands:(fork start end pullreq pr sync hotfix clone fetch)'
+    ;;
+    *)
+        case $words[2] in
+        end)
+            compadd "$@" `git branch | tr -s ' ' | cut -d ' ' -f 2`
+        ;;
+        *)
+            _files
+        esac
+    esac
+}
+ 
+_code "$@"
