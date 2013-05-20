@@ -1,4 +1,5 @@
 import webbrowser
+import urllib
 
 from codecli.utils import print_log
 import codecli.commands.fetch
@@ -78,8 +79,8 @@ def send_pullreq(branch, remote='upstream', remote_branch=None):
         base_repo = info['head']['repo']['name']
         baseref = info['head']['ref']
 
-    url = '%s/newpull/new?head_ref=%s&base_ref=%s&base_repo=%s' % (
-        repourl, branch, baseref, base_repo)
+    url = ('%s/newpull/new?' % repourl) + urllib.urlencode(dict(
+        head_ref=branch, base_ref=baseref, base_repo=base_repo))
     print_log("goto " + url)
     webbrowser.open(url)
 
