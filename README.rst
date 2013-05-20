@@ -107,7 +107,14 @@ rebase -i`` 清理一下提交，squash 无意义的 oops 或者 tmpsav 之类�
 
 如果是 hotfix 分支， 也会设置正确的目标分支 （比如 ``release`` ）
 
-加 ``-t`` 参数可以给其他人的 fork 提交 pull request 。
+加 ``-t`` 参数可以给其他人的 fork 提交 pull request，比如::
+
+    code pr -t satoru
+
+此时，也可以用 ``user:branch`` 的形式，指定向其他人的指定 branch 提交 pull
+request，比如::
+
+    code pr -t satoru:zsh_completion
 
 
 从非master分支进行hotfix
@@ -210,6 +217,11 @@ zsh下的code命令补全
 
 ChangeLog
 =========
+
+2013-05-20
+~~~~~~~~~~
+
+* ``code pr -t`` 参数支持指定目标仓库的 branch。
 
 2013-04-01
 ~~~~~~~~~~
