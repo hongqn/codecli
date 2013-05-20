@@ -26,7 +26,7 @@ def remote_and_pr_id_from_pr_branch(branch):
     return remote, pr_id
 
 
-def get_base_branch(branch, remote='upstream'):
+def get_base_branch(branch, remote='upstream', remote_branch=None):
     if branch.startswith('hotfix-'):
         base_branch = branch.split('-')[1]
         return remote, [], base_branch
@@ -38,11 +38,13 @@ def get_base_branch(branch, remote='upstream'):
             pr_id, remote, ref)]
         return remote, fetch_args, ref
 
-    return remote, [], 'master'
+    return remote, [], remote_branch or 'master'
 
 
-def merge_with_base(branch, rebase=False, remote='upstream'):
-    remote, fetch_args, baseref = get_base_branch(branch, remote=remote)
+def merge_with_base(branch, rebase=False, remote='upstream',
+                    remote_branch=None):
+    remote, fetch_args, baseref = get_base_branch(branch, remote=remote,
+                                                  remote_branch=remote_branch)
     check_call(['git', 'fetch', remote] + fetch_args)
     check_call(['git', 'rebase' if rebase else 'merge',
                 '%s/%s' % (remote, baseref)])
