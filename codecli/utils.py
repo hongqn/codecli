@@ -5,6 +5,8 @@ import re
 from subprocess import check_call as _check_call, Popen, PIPE
 from contextlib import contextmanager
 from getpass import getuser
+import urllib
+import webbrowser
 
 GREEN = '\x1b[1;32m'
 RESET = '\x1b[0m'
@@ -74,8 +76,15 @@ def cd(path):
         os.chdir(cwd)
 
 
-def input(prompt):
-    return raw_input(GREEN + prompt + RESET)
+def input(prompt, pattern=r'.*', default=''):
+    while True:
+        answer = raw_input(GREEN + prompt + RESET)
+
+        if not answer and default:
+            return default
+
+        if re.match(pattern, answer):
+            return answer
 
 
 def merge_config():
@@ -91,8 +100,8 @@ def merge_config():
         email = getoutput(['git', 'config', 'user.email']).strip()
         if not email.endswith('@douban.com'):
             email = '%s@douban.com' % getuser()
-        email = input("Please enter your @douban.com email [%s]: " % email
-                     ) or email
+        email = input("Please enter your @douban.com email [%s]: " % email,
+                      default=email)
         check_call(['git', 'config', '-f', path, 'user.email', email])
 
     name = getoutput(['git', 'config', '-f', path, 'user.name']).strip()
@@ -100,7 +109,7 @@ def merge_config():
         name = getoutput(['git', 'config', 'user.name']).strip()
         if not name:
             name = email.split('@')[0]
-        name = input("Please enter your name [%s]: " % name) or name
+        name = input("Please enter your name [%s]: " % name, default=name)
         check_call(['git', 'config', '-f', path, 'user.name', name])
 
     for line in getoutput(['git', 'config', '-f', path, '--list']).splitlines():
@@ -142,3 +151,11 @@ def get_remote_repo_url(remote):
 def get_remote_repo_name(remote):
     repourl = get_remote_repo_url(remote)
     return repourl[len('http://code.dapps.douban.com/'):]
+
+
+def send_pullreq(head_repo, head_ref, base_repo, base_ref):
+    url = ('http://code.dapps.douban.com/%s/newpull/new?' % head_repo) + \
+            urllib.urlencode(dict(head_ref=head_ref, base_ref=base_ref,
+                                  base_repo=base_repo))
+    print_log("goto " + url)
+    webbrowser.open(url)

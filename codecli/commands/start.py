@@ -14,18 +14,17 @@ def main(args):
 def start(branch, remote='upstream', fetch_args=[], base_ref='upstream/master'):
     existing_branches = get_branches()
     if branch in existing_branches:
-        while True:
-            answer = input("Branch %s exists, (s)witch to it or re(c)reate "
-                           "it?  (S/c) " % branch)
-            answer = answer.lower()[0] if answer else 's'
+        answer = input("Branch %s exists, (s)witch to it or re(c)reate "
+                       "it?  (S/c) " % branch, pattern=r'[sScC]',
+                       default='s')
+        answer = answer.lower()[0]
 
-            if answer == 's':
-                check_call(['git', 'checkout', branch])
-                return
+        if answer == 's':
+            check_call(['git', 'checkout', branch])
+            return
 
-            elif answer == 'c':
-                end_branch(branch)
-                break
+        elif answer == 'c':
+            end_branch(branch)
 
     check_call(['git', 'fetch', remote] + fetch_args)
     check_call(['git', 'checkout', '-b', branch, '--no-track', base_ref])

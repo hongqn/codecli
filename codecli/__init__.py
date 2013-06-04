@@ -19,6 +19,7 @@ def main():
         ('clone', 'clone', "Clone a repository to local"),
         ('fetch', 'fetch', "Set remote and fetch other user's fork"),
         ('end', 'end', "Delete branch from origin"),
+        ('merge', 'merge', "Merge an upstream branch to another upstream branch"),
     ]
 
     for command, module_name, help_text in subcommands:

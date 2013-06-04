@@ -198,6 +198,31 @@ end 分支的开发
     git push origin :{branchname}
 
 
+将 upstream 的一个分支 merge 到另一个分支
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+如果你维护的项目采用如 release 这样的分支标记正式上线版本和开发版本，并且用
+``code hotfix`` 命令来给线上版本做 hotfix ，那么你可能会经常有这样两个需求：
+
+1. 把 master 分支中的 commits 合并到 release 分支，准备上线。
+2. 把做了 hotfix 的 release 分支中的改动合并到 master 分支中。
+
+这时，你可以用 ``code merge`` 命令来简化操作。对第一种情况，执行::
+
+    code merge master release
+
+会发起一个将 upstream 中的 master 分支合并到 release 分支的 pull request。对
+第二种情况，执行::
+
+    code merge release master
+
+则会发起一个从 release 到 master 的 pull request 。
+
+使用 ``--push`` 参数可以在本地创建一个分支执行 merge 操作，然后直接 push 到
+upstream （需要有 upstream 的 push 权限）。如果有冲突，可以在本地修复冲突后，
+重新用 ``--push`` 运行。
+
+
 让code与git命令结合更紧密
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -217,6 +242,11 @@ zsh下的code命令补全
 
 ChangeLog
 =========
+
+2013-06-04
+~~~~~~~~~~
+
+* 增加 ``code merge`` 命令，简化 release 分支的管理。
 
 2013-05-20
 ~~~~~~~~~~

@@ -1,12 +1,9 @@
-import webbrowser
-import urllib
-
-from codecli.utils import print_log
 import codecli.commands.fetch
 from codecli.commands.start import start
 from codecli.utils import get_current_branch_name, merge_with_base, \
-        check_call, get_base_branch, get_remote_repo_name, get_remote_repo_url, \
-        remote_and_pr_id_from_pr_branch
+        check_call, get_base_branch, get_remote_repo_name, \
+        remote_and_pr_id_from_pr_branch, send_pullreq as _send_pullreq, \
+        print_log
 from codecli.apic import get_pullinfo
 
 
@@ -67,7 +64,6 @@ def push_to_my_fork(branch):
 
 
 def send_pullreq(branch, remote='upstream', remote_branch=None):
-    repourl = get_remote_repo_url('origin')
     remote, fetch_args, baseref = get_base_branch(branch, remote=remote,
                                                   remote_branch=remote_branch)
     base_repo = get_remote_repo_name(remote)
@@ -79,9 +75,5 @@ def send_pullreq(branch, remote='upstream', remote_branch=None):
         base_repo = info['head']['repo']['name']
         baseref = info['head']['ref']
 
-    url = ('%s/newpull/new?' % repourl) + urllib.urlencode(dict(
-        head_ref=branch, base_ref=baseref, base_repo=base_repo))
-    print_log("goto " + url)
-    webbrowser.open(url)
-
+    _send_pullreq(get_remote_repo_name('origin'), branch, base_repo, baseref)
 
