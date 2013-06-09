@@ -1,15 +1,18 @@
-from codecli.utils import check_call, get_branches
+from codecli.utils import check_call, get_branches, get_current_branch_name
 
 
 def populate_argument_parser(parser):
-    parser.add_argument('feature')
+    parser.add_argument('feature', nargs='?', default=get_current_branch_name())
 
 
 def main(args):
     branch = args.feature
+    assert branch != 'master', "Cannot terminate master branch!"
     end_branch(branch)
 
 def end_branch(branch):
+    if branch == get_current_branch_name():
+        check_call(['git', 'checkout', 'master'])
     check_call(['git', 'branch', '-d', branch])
     if does_branch_exist_on_origin(branch):
         check_call(['git', 'push', 'origin', ':%s' % branch])
