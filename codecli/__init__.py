@@ -18,7 +18,7 @@ def main():
         ('hotfix', 'hotfix', "Make a hotfix for branch other than master"),
         ('clone', 'clone', "Clone a repository to local"),
         ('fetch', 'fetch', "Set remote and fetch other user's fork"),
-        ('end', 'end', "Delete branch from origin"),
+        ('end', 'end', "Delete branch locally and on origin remote"),
         ('merge', 'merge', "Merge an upstream branch to another upstream branch"),
     ]
 
@@ -32,7 +32,7 @@ def main():
             print >>sys.stderr, "Can not import command %s, skip it" % command
             continue
 
-        subparser = subparsers.add_parser(command, help=help_text)
+        subparser = subparsers.add_parser(command, description=help_text)
         subparser.add_argument('-v', '--verbose', action='store_true',
                                help="enable additional output")
 
