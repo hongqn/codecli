@@ -2,11 +2,13 @@ from codecli.utils import check_call, get_branches, get_current_branch_name
 
 
 def populate_argument_parser(parser):
-    parser.add_argument('branch', nargs='?', default=get_current_branch_name())
+    parser.add_argument('branch', nargs='?', help="[default: current branch]")
 
 
 def main(args):
     branch = args.branch
+    if not branch:
+        branch = get_current_branch_name()
     assert branch != 'master', "Cannot terminate master branch!"
     end_branch(branch)
 
