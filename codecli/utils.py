@@ -144,7 +144,7 @@ def get_remote_repo_url(remote):
         raise Exception("no remote %s found" % remote)
 
     giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
-    assert re.match(r"^http://code.dapps.douban.com/.+\.git$", giturl)
+    assert re.match(r"^http://([a-zA-Z0-9]+@)?code.dapps.douban.com/.+\.git$", giturl), "This url do not look like code dapps git repo url: %s" % giturl
     repourl = giturl[: -len('.git')]
     return repourl
 
