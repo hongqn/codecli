@@ -45,3 +45,25 @@ upstream    http://code.dapps.douban.com/testrepo.git (push)
 
         repourl = M.get_remote_repo_url('origin')
     eq_(repourl, 'http://Louis14@code.dapps.douban.com/testrepo')
+
+def test_get_repo_name():
+    with patch.object(M, 'getoutput') as mock_getoutput:
+        mock_getoutput.return_value = """\
+origin  http://code.dapps.douban.com/testrepo.git (fetch)
+origin  http://code.dapps.douban.com/testrepo.git (push)
+upstream    http://code.dapps.douban.com/testrepo.git (fetch)
+upstream    http://code.dapps.douban.com/testrepo.git (push)
+"""
+        n = M.get_remote_repo_name('origin')
+    eq_(n, 'testrepo')
+
+def test_get_repo_name_with_user():
+    with patch.object(M, 'getoutput') as mock_getoutput:
+        mock_getoutput.return_value = """\
+origin  http://Louis14@code.dapps.douban.com/testrepo.git (fetch)
+origin  http://Louis14@code.dapps.douban.com/testrepo.git (push)
+upstream    http://code.dapps.douban.com/testrepo.git (fetch)
+upstream    http://code.dapps.douban.com/testrepo.git (push)
+"""
+        n = M.get_remote_repo_name('origin')
+    eq_(n, 'testrepo')

@@ -150,8 +150,8 @@ def get_remote_repo_url(remote):
 
 def get_remote_repo_name(remote):
     repourl = get_remote_repo_url(remote)
-    return repourl[len('http://code.dapps.douban.com/'):]
-
+    _, _, reponame = repourl.partition('code.dapps.douban.com/')
+    return reponame
 
 def send_pullreq(head_repo, head_ref, base_repo, base_ref):
     url = ('http://code.dapps.douban.com/%s/newpull/new?' % head_repo) + \
