@@ -1,4 +1,5 @@
-from codecli.utils import check_call, get_branches, get_current_branch_name
+from codecli.utils import (check_call, get_branches, get_current_branch_name,
+                           merge_with_base)
 
 
 def populate_argument_parser(parser):
@@ -13,6 +14,8 @@ def main(args):
     end_branch(branch)
 
 def end_branch(branch):
+    merge_with_base(branch)
+    check_call(['git', 'push', 'origin', branch])
     if branch == get_current_branch_name():
         check_call(['git', 'checkout', 'master'])
     check_call(['git', 'branch', '-d', branch])
