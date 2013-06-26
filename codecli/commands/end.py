@@ -1,8 +1,12 @@
-from codecli.utils import check_call, get_branches, get_current_branch_name
+from codecli.utils import (check_call, get_branches, get_current_branch_name,
+                           merge_with_base)
 
 
 def populate_argument_parser(parser):
     parser.add_argument('branch', nargs='?', help="[default: current branch]")
+    parser.add_argument('-f', '--force', action='store_true',
+                        help="force branch deletion even if not "
+                        "fully merged (git branch -D)")
 
 
 def main(args):
@@ -10,12 +14,16 @@ def main(args):
     if not branch:
         branch = get_current_branch_name()
     assert branch != 'master', "Cannot terminate master branch!"
-    end_branch(branch)
+    end_branch(branch, args.force)
 
-def end_branch(branch):
+def end_branch(branch, force):
+    merge_with_base(branch)
     if branch == get_current_branch_name():
         check_call(['git', 'checkout', 'master'])
-    check_call(['git', 'branch', '-d', branch])
+    if force:
+        check_call(['git', 'branch', '-D', branch])
+    else:
+        check_call(['git', 'branch', '-d', branch])
     if does_branch_exist_on_origin(branch):
         check_call(['git', 'push', 'origin', ':%s' % branch])
 
