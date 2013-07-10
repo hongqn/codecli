@@ -3,7 +3,7 @@ from codecli.utils import check_call, repo_git_url, cd, merge_config
 
 def populate_argument_parser(parser):
     parser.add_argument('upstream', help="name of upstream repo [e.g. dae]")
-    parser.add_argument('origin', help="name of my fork [e.g. dae_hongqn]")
+    parser.add_argument('origin', help="name of my fork [e.g. hongqn/dae]")
     parser.add_argument('dir', help="directory to clone")
 
 
