@@ -19,6 +19,7 @@ def main(args):
 
 
 def merge_and_push(from_branch, to_branch):
+    check_call(['git', 'fetch', 'upstream'])
     local_branch = 'merge/{0}-to-{1}'.format(from_branch, to_branch)
     existing_branches = get_branches()
     answer = 'd'
