@@ -243,6 +243,40 @@ zsh下的code命令补全
 ChangeLog
 =========
 
+2013-07-11
+~~~~~~~~~~
+
+* 在首次发 pullreq 的 branch 上使用 rebase master 代替 merge master，减少无谓
+  的 merge commit
+
+2013-07-11
+~~~~~~~~~~
+
+* docfix: 修正了 ``code fork --help`` 帮助信息中的样例仓库名 (thank satoru)
+
+* bugfix: ``code merge --push`` 没有执行 ``git fetch upstream`` ，导致 merge
+  的数据不是最新的
+
+2013-06-26
+~~~~~~~~~~
+
+* ``code end`` 命令增加 ``-f`` 参数，可删除未 push 的分支 (thank guibog)
+
+2013-06-18
+~~~~~~~~~~
+
+* 允许 remote 为 "用户名@" 的形式的 URL (thank guibog)
+
+2013-06-13
+~~~~~~~~~~
+
+* bugfix: 在非 git repo 目录下运行 code 会出错
+
+2013-06-09
+~~~~~~~~~~
+
+* ``code end`` 命令默认关闭当前分支 (thank guibog)
+
 2013-06-04
 ~~~~~~~~~~
 
