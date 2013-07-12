@@ -197,6 +197,10 @@ end 分支的开发
     git br -d {branchname}
     git push origin :{branchname}
 
+branchname 缺省值为当前 branch ，所以用 ``code end`` 会直接删除当前的 branch。
+
+如果需要同时删除多个 branch ，也可以用 ``code end br1 br2 br3`` 这种方式。
+
 
 将 upstream 的一个分支 merge 到另一个分支
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
