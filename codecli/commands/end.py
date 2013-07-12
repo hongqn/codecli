@@ -1,20 +1,28 @@
+import subprocess
+
 from codecli.utils import (check_call, get_branches, get_current_branch_name,
-                           merge_with_base)
+                           merge_with_base, log_error)
 
 
 def populate_argument_parser(parser):
-    parser.add_argument('branch', nargs='?', help="[default: current branch]")
+    parser.add_argument('branches', nargs='*', help="[default: current branch]")
     parser.add_argument('-f', '--force', action='store_true',
                         help="force branch deletion even if not "
                         "fully merged (git branch -D)")
 
 
 def main(args):
-    branch = args.branch
-    if not branch:
-        branch = get_current_branch_name()
-    assert branch != 'master', "Cannot terminate master branch!"
-    end_branch(branch, args.force)
+    branches = args.branches
+    if not branches:
+        branches = [get_current_branch_name()]
+    assert 'master' not in branches, "Cannot terminate master branch!"
+    for br in branches:
+        try:
+            end_branch(br, args.force)
+        except subprocess.CalledProcessError as e:
+            print(e)
+            log_error("Fail to delete branch %s." % br)
+
 
 def end_branch(branch, force):
     merge_with_base(branch)
@@ -26,6 +34,7 @@ def end_branch(branch, force):
         check_call(['git', 'branch', '-d', branch])
     if does_branch_exist_on_origin(branch):
         check_call(['git', 'push', 'origin', ':%s' % branch])
+
 
 def does_branch_exist_on_origin(branch):
     branches = get_branches(include_remotes=True)

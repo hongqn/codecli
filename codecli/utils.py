@@ -9,6 +9,7 @@ import urllib
 import webbrowser
 
 GREEN = '\x1b[1;32m'
+RED = '\x1b[31m'
 RESET = '\x1b[0m'
 
 
@@ -59,8 +60,13 @@ def check_call(cmd, *args, **kwargs):
 
 
 def print_log(outstr):
-    print GREEN + ">> " + outstr + RESET
+    _color_msg(outstr, GREEN)
 
+def log_error(msg):
+    _color_msg(msg, RED)
+
+def _color_msg(msg, color):
+    print color + ">> " + msg + RESET
 
 def repo_git_url(repo_name):
     return 'http://code.dapps.douban.com/%s.git' % repo_name
