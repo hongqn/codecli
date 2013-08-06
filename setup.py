@@ -22,7 +22,7 @@ code = codecli:main
 
 # dependencies
 INSTALL_REQUIRES = []
-TESTS_REQUIRE = ['nose']
+TESTS_REQUIRE = ['nose', 'mock']
 TEST_SUITE = 'nose.collector'
 
 here = os.path.abspath(os.path.dirname(__file__))
