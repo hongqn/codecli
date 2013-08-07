@@ -24,7 +24,7 @@ def start(branch, remote='upstream', fetch_args=[], base_ref='upstream/master'):
             return
 
         elif answer == 'c':
-            end_branch(branch)
+            end_branch(branch, force=True)
 
     check_call(['git', 'fetch', remote] + fetch_args)
     check_call(['git', 'checkout', '-b', branch, '--no-track', base_ref])
