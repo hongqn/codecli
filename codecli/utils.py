@@ -150,13 +150,17 @@ def get_remote_repo_url(remote):
         raise Exception("no remote %s found" % remote)
 
     giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
-    assert re.match(r"^http://([a-zA-Z0-9]+@)?code.dapps.douban.com/.+\.git$", giturl), "This url do not look like code dapps git repo url: %s" % giturl
+    assert (re.match(r"^http://([a-zA-Z0-9]+@)?code.dapps.douban.com/.+\.git$", giturl) or
+           re.match(r"^git@code.intra.douban.com:.+\.git$", giturl)), \
+           "This url do not look like code dapps git repo url: %s" % giturl
     repourl = giturl[: -len('.git')]
     return repourl
 
 def get_remote_repo_name(remote):
     repourl = get_remote_repo_url(remote)
     _, _, reponame = repourl.partition('code.dapps.douban.com/')
+    if not reponame:
+        _, _, reponame = repourl.partition('code.intra.douban.com:')
     return reponame
 
 def send_pullreq(head_repo, head_ref, base_repo, base_ref):
