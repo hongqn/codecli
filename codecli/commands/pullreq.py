@@ -66,7 +66,7 @@ def push_to_my_fork(branch):
 
 
 def branch_is_published_already(branch):
-    return bool(getoutput(['git', 'config', 'branch.%s.remote' % branch]))
+    return bool(getoutput(['git', 'branch', '-r', '--contains', branch]))
 
 
 def send_pullreq(branch, remote='upstream', remote_branch=None):
