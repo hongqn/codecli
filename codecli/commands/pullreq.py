@@ -66,6 +66,7 @@ def push_to_my_fork(branch):
 
 
 def branch_is_published_already(branch):
+    check_call(['git', 'fetch', 'origin'])
     return bool(getoutput(['git', 'branch', '-r', '--contains', branch]))
 
 
