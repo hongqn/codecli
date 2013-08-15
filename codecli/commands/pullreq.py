@@ -67,7 +67,13 @@ def push_to_my_fork(branch):
 
 def branch_is_published_already(branch):
     check_call(['git', 'fetch', 'origin'])
-    return bool(getoutput(['git', 'branch', '-r', '--contains', branch]))
+    commits = getoutput(['git', 'log', '--pretty=oneline', 'master..%s' % branch])
+    if commits:
+        log_line = commits.split('\n')[-1]
+        first_ci = log_line.split()[0]
+    else:
+        first_ci = branch
+    return bool(getoutput(['git', 'branch', '-r', '--contains', first_ci]))
 
 
 def send_pullreq(branch, remote='upstream', remote_branch=None):
