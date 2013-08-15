@@ -8,10 +8,6 @@ from getpass import getuser
 import urllib
 import webbrowser
 
-GREEN = '\x1b[1;32m'
-RED = '\x1b[31m'
-RESET = '\x1b[0m'
-
 
 def get_current_branch_name():
     output = getoutput(['git', 'symbolic-ref', 'HEAD'])
@@ -60,13 +56,10 @@ def check_call(cmd, *args, **kwargs):
 
 
 def print_log(outstr):
-    _color_msg(outstr, GREEN)
+    print green(outstr)
 
 def log_error(msg):
-    _color_msg(msg, RED)
-
-def _color_msg(msg, color):
-    print color + ">> " + msg + RESET
+    print red(msg)
 
 def repo_git_url(repo_name):
     return 'http://code.dapps.douban.com/%s.git' % repo_name
@@ -84,7 +77,7 @@ def cd(path):
 
 def input(prompt, pattern=r'.*', default=''):
     while True:
-        answer = raw_input(GREEN + prompt + RESET)
+        answer = raw_input(green(prompt))
 
         if not answer and default:
             return default
@@ -169,3 +162,16 @@ def send_pullreq(head_repo, head_ref, base_repo, base_ref):
                                   base_repo=base_repo))
     print_log("goto " + url)
     webbrowser.open(url)
+
+
+def _wrap_with(code):
+
+    def inner(text, bold=False):
+        c = code
+        if bold:
+            c = "1;%s" % c
+        return "\033[%sm%s\033[0m" % (c, text)
+    return inner
+
+red = _wrap_with('31')
+green = _wrap_with('32')
