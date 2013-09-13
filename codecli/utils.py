@@ -103,11 +103,9 @@ def merge_config():
                       default=email)
         check_call(['git', 'config', '-f', path, 'user.email', email])
 
-    name = getoutput(['git', 'config', '-f', path, 'user.name']).strip()
+    name = get_user_name()
     if not name:
-        name = getoutput(['git', 'config', 'user.name']).strip()
-        if not name:
-            name = email.split('@')[0]
+        name = email.split('@')[0]
         name = input("Please enter your name [%s]: " % name, default=name)
         check_call(['git', 'config', '-f', path, 'user.name', name])
 
@@ -119,6 +117,13 @@ def merge_config():
         key, value = line.split('=', 1)
         check_call(['git', 'config', key, value])
 
+
+def get_user_name():
+    path = os.path.expanduser('~/.codecli.conf')
+    name = getoutput(['git', 'config', '-f', path, 'user.name']).strip()
+    if not name:
+        name = getoutput(['git', 'config', 'user.name']).strip()
+    return name
 
 def getoutput(cmd):
     stdout, stderr = Popen(cmd, stdout=PIPE).communicate()

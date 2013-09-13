@@ -37,6 +37,12 @@ Usage
 
     $ code fork codecli hongqn/codecli codecli
 
+``your_fork``和``dir``可以忽略，默认值分别为``{user_name}/{repo}``和``{repo}``，例如::
+
+    $ code fork codecli
+
+就等同于前一个例子(需要确保你在~/.codecli.conf里设置了user.name)
+
 
 如果你只是想管理自己的仓库，而不是向其他人的仓库贡献代码，可以用 ``code
 clone`` 命令::
