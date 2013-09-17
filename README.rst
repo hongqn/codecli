@@ -41,7 +41,7 @@ Usage
 
     $ code fork codecli
 
-就等同于前一个例子(需要确保你在~/.codecli.conf里设置了user.name)
+就等同于前一个例子(需要确保你在~/.codecli.conf里设置了user.email)
 
 
 如果你只是想管理自己的仓库，而不是向其他人的仓库贡献代码，可以用 ``code
