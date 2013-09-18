@@ -125,6 +125,13 @@ def get_user_name():
         name = getoutput(['git', 'config', 'user.name']).strip()
     return name
 
+
+def get_code_username():
+    path = os.path.expanduser('~/.codecli.conf')
+    email = getoutput(['git', 'config', '-f', path, 'user.email']).strip()
+    return email.split('@')[0] if email else None
+
+
 def getoutput(cmd):
     stdout, stderr = Popen(cmd, stdout=PIPE).communicate()
     return stdout[:-1] if stdout[-1:] == '\n' else stdout
