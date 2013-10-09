@@ -7,13 +7,14 @@ def populate_argument_parser(parser):
 
 
 def main(args):
-    cmd = ['git', 'clone', repo_git_url(args.repo)]
+    url = repo_git_url(args.repo)
+    cmd = ['git', 'clone', url]
 
     if args.dir:
         cmd.append(args.dir)
         dir = args.dir
     else:
-        dir = args.repo.rsplit('/', 1)[-1].rstrip('.git')
+        dir = url.rsplit('/', 1)[-1].rstrip('.git')
 
     check_call(cmd)
 
@@ -21,5 +22,4 @@ def main(args):
         merge_config()
 
         # set upstream to origin to make other code commands work
-        check_call(['git', 'remote', 'add', 'upstream', repo_git_url(args.repo)])
-
+        check_call(['git', 'remote', 'add', 'upstream', url])
