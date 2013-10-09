@@ -62,9 +62,10 @@ def log_error(msg):
     print red(msg)
 
 def repo_git_url(repo_name):
-    CODE_URL = 'http://code.dapps.douban.com'
-    if repo_name.startswith(CODE_URL):
+    if '://' in repo_name:
         return repo_name
+
+    CODE_URL = 'http://code.dapps.douban.com'
     return '%s/%s.git' % (CODE_URL, repo_name)
 
 
