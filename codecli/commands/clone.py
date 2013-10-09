@@ -2,17 +2,19 @@ from codecli.utils import check_call, repo_git_url, cd, merge_config
 
 
 def populate_argument_parser(parser):
-    parser.add_argument('repo', help="name of repo [e.g. dae]")
+    parser.add_argument('repo', help="url or name of repo [e.g. dae]")
     parser.add_argument('dir', nargs='?', help="directory to clone to")
 
 
 def main(args):
-    cmd =['git', 'clone', repo_git_url(args.repo)]
+    cmd = ['git', 'clone', repo_git_url(args.repo)]
+
     if args.dir:
         cmd.append(args.dir)
         dir = args.dir
     else:
-        dir = args.repo.split('/')[-1]
+        dir = args.repo.rsplit('/', 1)[-1].rstrip('.git')
+
     check_call(cmd)
 
     with cd(dir):
