@@ -14,7 +14,7 @@ def main(args):
         cmd.append(args.dir)
         dir = args.dir
     else:
-        dir = url.rsplit('/', 1)[-1].rstrip('.git')
+        dir = url.rsplit('/', 1)[-1].rpartition('.git')[0]
 
     check_call(cmd)
 
