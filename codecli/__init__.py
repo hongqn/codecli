@@ -10,6 +10,7 @@ def main():
     subparsers = parser.add_subparsers(title="commands",
                                        dest="subparser_command")
     subcommands = [
+        ('config', 'config', "Get and set codecli options"),
         ('fork', 'fork', "Create a fork"),
         ('start', 'start', "Start a new feature/bugfix branch"),
         ('sync', 'sync', "Sync branch with master"),

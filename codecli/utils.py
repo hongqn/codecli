@@ -1,8 +1,9 @@
 from __future__ import absolute_import
 
 import os
+import sys
 import re
-from subprocess import check_call as _check_call, Popen, PIPE
+from subprocess import check_call as _check_call, call as _call, Popen, PIPE
 from contextlib import contextmanager
 from getpass import getuser
 import urllib
@@ -33,7 +34,7 @@ def get_base_branch(branch, remote='upstream', remote_branch=None):
     if branch.startswith('pr/'):
         remote, pr_id = remote_and_pr_id_from_pr_branch(branch)
         ref = 'pr/{1}'.format(remote, pr_id)
-        fetch_args=['+refs/pull/{0}/head:refs/remotes/{1}/{2}'.format(
+        fetch_args = ['+refs/pull/{0}/head:refs/remotes/{1}/{2}'.format(
             pr_id, remote, ref)]
         return remote, fetch_args, ref
 
@@ -55,11 +56,19 @@ def check_call(cmd, *args, **kwargs):
     return _check_call(cmd, *args, **kwargs)
 
 
+def call(cmd, *args, **kwargs):
+    cmdstr = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
+    print_log(cmdstr)
+    return _call(cmd, *args, **kwargs)
+
+
 def print_log(outstr):
-    print green(outstr)
+    print >>sys.stderr, green(outstr)
+
 
 def log_error(msg):
-    print red(msg)
+    print >>sys.stderr, red(msg)
+
 
 def repo_git_url(repo_name):
     if '://' in repo_name:
@@ -90,49 +99,67 @@ def input(prompt, pattern=r'.*', default=''):
             return answer
 
 
+def get_config_path():
+    return os.path.expanduser('~/.codecli.conf')
+
+
+def get_config(key):
+    return getoutput(['git', 'config', '-f', get_config_path(), key]).strip()
+
+
+def set_config(key, value):
+    check_call(['git', 'config', '-f', get_config_path(), key, value])
+
+
+def del_config(key):
+    check_call(['git', 'config', '-f', get_config_path(), '--unset', key])
+
+
+def iter_config():
+    for line in getoutput(['git', 'config', '-f', get_config_path(),
+                           '--list']).splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        key, value = line.split('=', 1)
+        yield key, value
+
+
 def merge_config():
     """merge all config in ~/.codecli.conf to current git repo's config.
 
     Will prompt for email and name if they do not exist in ~/.codecli.conf.
 
     """
-    path = os.path.expanduser('~/.codecli.conf')
-
-    email = getoutput(['git', 'config', '-f', path, 'user.email']).strip()
+    email = get_config('user.email')
     if not email:
         email = getoutput(['git', 'config', 'user.email']).strip()
         if not email.endswith('@douban.com'):
             email = '%s@douban.com' % getuser()
         email = input("Please enter your @douban.com email [%s]: " % email,
                       default=email)
-        check_call(['git', 'config', '-f', path, 'user.email', email])
+        set_config('user.email', email)
 
     name = get_user_name()
     if not name:
         name = email.split('@')[0]
         name = input("Please enter your name [%s]: " % name, default=name)
-        check_call(['git', 'config', '-f', path, 'user.name', name])
+        set_config('user.name', name)
 
-    for line in getoutput(['git', 'config', '-f', path, '--list']).splitlines():
-        line = line.strip()
-        if not line:
-            continue
-
-        key, value = line.split('=', 1)
+    for key, value in iter_config():
         check_call(['git', 'config', key, value])
 
 
 def get_user_name():
-    path = os.path.expanduser('~/.codecli.conf')
-    name = getoutput(['git', 'config', '-f', path, 'user.name']).strip()
+    name = get_config('user.name')
     if not name:
         name = getoutput(['git', 'config', 'user.name']).strip()
     return name
 
 
 def get_code_username():
-    path = os.path.expanduser('~/.codecli.conf')
-    email = getoutput(['git', 'config', '-f', path, 'user.email']).strip()
+    email = get_config('user.email')
     return email.split('@')[0] if email else None
 
 
@@ -160,10 +187,11 @@ def get_remote_repo_url(remote):
 
     giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
     assert (re.match(r"^http://([a-zA-Z0-9]+@)?code.dapps.douban.com/.+\.git$", giturl) or
-           re.match(r"^git@code.(intra|dapps).douban.com:.+\.git$", giturl)), \
-           "This url do not look like code dapps git repo url: %s" % giturl
+            re.match(r"^git@code.(intra|dapps).douban.com:.+\.git$", giturl)), \
+        "This url do not look like code dapps git repo url: %s" % giturl
     repourl = giturl[: -len('.git')]
     return repourl
+
 
 def get_remote_repo_name(remote):
     repourl = get_remote_repo_url(remote)
@@ -172,10 +200,11 @@ def get_remote_repo_name(remote):
         _, _, reponame = repourl.partition('code.intra.douban.com:')
     return reponame
 
+
 def send_pullreq(head_repo, head_ref, base_repo, base_ref):
-    url = ('http://code.dapps.douban.com/%s/newpull/new?' % head_repo) + \
-            urllib.urlencode(dict(head_ref=head_ref, base_ref=base_ref,
-                                  base_repo=base_repo))
+    url = (('http://code.dapps.douban.com/%s/newpull/new?' % head_repo) +
+           urllib.urlencode(dict(head_ref=head_ref, base_ref=base_ref,
+                                 base_repo=base_repo)))
     print_log("goto " + url)
     webbrowser.open(url)
 
