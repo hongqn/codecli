@@ -206,7 +206,20 @@ def send_pullreq(head_repo, head_ref, base_repo, base_ref):
            urllib.urlencode(dict(head_ref=head_ref, base_ref=base_ref,
                                  base_repo=base_repo)))
     print_log("goto " + url)
-    webbrowser.open(url)
+    browser_open(url)
+
+
+def browser_open(url):
+    browser_name = get_config('webbrowser.name')
+    if browser_name.lower() == 'none':
+        return
+
+    try:
+        browser = webbrowser.get(browser_name or None)
+    except webbrowser.Error:
+        check_call([browser, url])
+    else:
+        browser.open(url)
 
 
 def _wrap_with(code):
