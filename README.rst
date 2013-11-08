@@ -278,6 +278,20 @@ zsh下的code命令补全
 ChangeLog
 =========
 
+2013-11-08
+~~~~~~~~~~
+
+* feature: 增加 ``code config`` 命令，可以使用 ``code config webbrowser.name``
+  定制 webbrowser 行为。
+* feature: 允许 ``code clone`` 使用URL作为参数。 Thank satoru!
+* feature: ``code fork`` 时默认使用自己的fork仓库名。 Thank satoru!
+* feature: ``code fork`` 时默认 clone 到仓库同名目录。 Thank satoru!
+* feature: 支持 code ssh url。 Thank chenzheng and yaofeng!
+* feature: 允许 ``code end`` 结束多个 branches。  Thank satoru!
+* bugfix: 修正当仓库名中含有 ``g`` ``i`` ``t`` 字符时会出错的问题。 Thank anrs!
+* bugfix: 修复判断分支是否已经 push 到 remote 的方法，避免误判。  Thank satoru!
+* bugfix: 修复重复开启 pr-on-pr 会出错的问题。  Tthank menghan!
+
 2013-07-11
 ~~~~~~~~~~
 
