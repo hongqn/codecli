@@ -233,6 +233,31 @@ upstream （需要有 upstream 的 push 权限）。如果有冲突，可以在�
 重新用 ``--push`` 运行。
 
 
+定制 webbrowser 的行为
+~~~~~~~~~~~~~~~~~~~~~~
+
+在发送 pullreq 时，codecli 会使用默认浏览器打开 code 的提交界面。可以用以下命
+令来定制此行为：
+
+    code config webbrowser.name firefox
+
+指定使用 Firefox 来打开。此处可选择的值为 Python 的 webbrowser_ 模块中注册的名字。
+
+.. _webbrowser: http://docs.python.org/2.7/library/webbrowser.html
+
+    code config webbrowser.name /path/to/executable
+
+使用指定脚本打开，待打开的 URL 会作为参数传递给脚本。
+
+    code config webbrowser.name none
+
+不使用浏览器打开，仅在终端显示URL地址。
+
+    code config webbrowser.name --unset
+
+恢复成使用默认浏览器打开。
+
+
 让code与git命令结合更紧密
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
