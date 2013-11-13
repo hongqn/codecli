@@ -198,6 +198,8 @@ def get_remote_repo_name(remote):
     _, _, reponame = repourl.partition('code.dapps.douban.com/')
     if not reponame:
         _, _, reponame = repourl.partition('code.intra.douban.com:')
+    if not reponame:
+        _, _, reponame = repourl.partition('code.dapps.douban.com:')
     return reponame
 
 
