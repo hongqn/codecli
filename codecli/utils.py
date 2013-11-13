@@ -217,7 +217,8 @@ def browser_open(url):
     try:
         browser = webbrowser.get(browser_name or None)
     except webbrowser.Error:
-        check_call([browser, url])
+        if browser_name:
+            check_call([browser_name, url])
     else:
         browser.open(url)
 
