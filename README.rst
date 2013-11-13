@@ -278,6 +278,11 @@ zsh下的code命令补全
 ChangeLog
 =========
 
+2013-11-13
+
+* bugfix: 修复当 ``webbrowser.name`` 未设置或者设置为 script 时会抛异常的问题。
+  Thank xupeng!
+
 2013-11-08
 ~~~~~~~~~~
 
@@ -290,7 +295,7 @@ ChangeLog
 * feature: 允许 ``code end`` 结束多个 branches。  Thank satoru!
 * bugfix: 修正当仓库名中含有 ``g`` ``i`` ``t`` 字符时会出错的问题。 Thank anrs!
 * bugfix: 修复判断分支是否已经 push 到 remote 的方法，避免误判。  Thank satoru!
-* bugfix: 修复重复开启 pr-on-pr 会出错的问题。  Tthank menghan!
+* bugfix: 修复重复开启 pr-on-pr 会出错的问题。  Thank menghan!
 
 2013-07-11
 ~~~~~~~~~~
