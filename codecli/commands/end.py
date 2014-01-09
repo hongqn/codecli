@@ -1,7 +1,7 @@
 import subprocess
 
-from codecli.utils import (check_call, get_branches, get_current_branch_name,
-                           merge_with_base, log_error)
+from codecli.utils import (check_call, call, get_branches, get_current_branch_name,
+                           merge_with_base, log_error, input)
 
 
 def populate_argument_parser(parser):
@@ -31,7 +31,15 @@ def end_branch(branch, force):
     if force:
         check_call(['git', 'branch', '-D', branch])
     else:
-        check_call(['git', 'branch', '-d', branch])
+        failed = call(['git', 'branch', '-d', branch])
+        if failed:
+            log_error("Failed to delete branch %s because it is not fully "
+                      "merged (may cause commits loss)." % branch)
+            answer = input("Do you want to force to delete it even so? (y/N) ",
+                           pattern=r'[nNyY].*', default='n')
+            if answer in 'yY':
+                check_call(['git', 'branch', '-D', branch])
+
     if does_branch_exist_on_origin(branch):
         check_call(['git', 'push', 'origin', ':%s' % branch])
 
