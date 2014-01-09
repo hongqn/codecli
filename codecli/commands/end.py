@@ -37,7 +37,7 @@ def end_branch(branch, force):
                       "merged (may cause commits loss)." % branch)
             answer = input("Do you want to force to delete it even so? (y/N) ",
                            pattern=r'[nNyY].*', default='n')
-            if answer in 'yY':
+            if answer[0] in 'yY':
                 check_call(['git', 'branch', '-D', branch])
 
     if does_branch_exist_on_origin(branch):
