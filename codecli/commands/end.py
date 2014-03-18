@@ -25,7 +25,6 @@ def main(args):
 
 
 def end_branch(branch, force):
-    merge_with_base(branch)
     if branch == get_current_branch_name():
         check_call(['git', 'checkout', 'master'])
     if force:
