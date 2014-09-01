@@ -18,6 +18,7 @@ def populate_argument_parser(parser):
 def main(args):
     name = args.upstream
 
+    code_username = ''
     if not args.origin:
         code_username = get_code_username()
         if not code_username:
@@ -29,7 +30,7 @@ def main(args):
         args.dir = name.rsplit('/')[-1]
         print_log("Destination dir is not specified, will use {}".format(args.dir))
 
-    check_call(['git', 'clone', repo_git_url(args.origin), args.dir])
+    check_call(['git', 'clone', repo_git_url(args.origin, login_user=code_username), args.dir])
     with cd(args.dir):
         merge_config()
         check_call(['git', 'remote', 'add', 'upstream', repo_git_url(name)])

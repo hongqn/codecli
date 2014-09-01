@@ -70,12 +70,14 @@ def log_error(msg):
     print >>sys.stderr, red(msg)
 
 
-def repo_git_url(repo_name):
+def repo_git_url(repo_name, login_user=''):
     if '://' in repo_name:
         return repo_name
 
-    CODE_URL = 'http://code.dapps.douban.com'
-    return '%s/%s.git' % (CODE_URL, repo_name)
+    if login_user:
+        login_user = login_user + '@'
+    CODE_ADDR = 'code.dapps.douban.com'
+    return 'http://%s%s/%s.git' % (login_user, CODE_ADDR, repo_name)
 
 
 @contextmanager

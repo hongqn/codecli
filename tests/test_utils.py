@@ -67,3 +67,9 @@ upstream    http://code.dapps.douban.com/testrepo.git (push)
 """
         n = M.get_remote_repo_name('origin')
     eq_(n, 'testrepo')
+
+
+def test_repo_git_url():
+    eq_(M.repo_git_url('shire'), 'http://code.dapps.douban.com/shire.git')
+    eq_(M.repo_git_url('user/shire'), 'http://code.dapps.douban.com/user/shire.git')
+    eq_(M.repo_git_url('user/shire', login_user='user'), 'http://user@code.dapps.douban.com/user/shire.git')
