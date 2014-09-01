@@ -162,7 +162,7 @@ def get_user_name():
 
 def get_code_username():
     email = get_config('user.email')
-    return email.split('@')[0] if email else None
+    return email.split('@')[0] if email and email.endswith('@douban.com') else None
 
 
 def getoutput(cmd):
