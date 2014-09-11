@@ -70,13 +70,8 @@ def log_error(msg):
 
 
 def repo_git_url(repo_name, login_user=''):
-    if '://' in repo_name:
-        return repo_name
-
-    if login_user:
-        login_user = login_user + '@'
-    CODE_ADDR = 'code.dapps.douban.com'
-    return 'http://%s%s/%s.git' % (login_user, CODE_ADDR, repo_name)
+    from codecli.providers import get_git_service_provider
+    return get_git_service_provider().get_repo_git_url(repo_name, login_user)
 
 
 @contextmanager

@@ -42,3 +42,12 @@ class CodeProvider(GitServiceProvider):
             "This url do not look like code dapps git repo url: %s" % giturl
         repourl = giturl[: -len('.git')]
         return repourl
+
+    def get_repo_git_url(self, repo_name, login_user=''):
+        if '://' in repo_name:
+            return repo_name
+
+        if login_user:
+            login_user = login_user + '@'
+        CODE_ADDR = 'code.dapps.douban.com'
+        return 'http://%s%s/%s.git' % (login_user, CODE_ADDR, repo_name)

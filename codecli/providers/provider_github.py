@@ -21,7 +21,9 @@ class GithubProvider(GitServiceProvider):
 
     def get_remote_repo_name(self, remote):
         repourl = self.get_remote_repo_url(remote)
-        _, _, reponame = repourl.partition('github.com:')
+        _, _, reponame = repourl.partition('github.com/')
+        if not reponame:
+            _, _, reponame = repourl.partition('github.com:')
         return reponame
 
     def get_remote_repo_url(self, remote):
@@ -35,7 +37,14 @@ class GithubProvider(GitServiceProvider):
 
         giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
 
-        assert re.match(r"^git@github.com:.+\.git$", giturl), \
+        assert (re.match(r"^git@github.com:.+\.git$", giturl) or
+                re.match(r"^https://github.com/.+\.git$", giturl)), \
             "This url do not look like a github repo url: %s" % giturl
         repourl = giturl[: -len('.git')]
         return repourl
+
+    def get_repo_git_url(self, repo_name, login_user=''):
+        if '://' in repo_name:
+            return repo_name
+
+        return 'https://github.com/%s.git' % repo_name
