@@ -4,7 +4,7 @@ import os
 import glob
 import importlib
 
-KNOW_PROVIDERS = {}
+KNOWN_PROVIDERS = {}
 
 
 class ProviderMeta(type):
@@ -12,7 +12,7 @@ class ProviderMeta(type):
         super_new = super(ProviderMeta, cls).__new__
         new_class = super_new(cls, name, bases, attrs)
         for url in new_class.URLS:
-            KNOW_PROVIDERS[url] = new_class
+            KNOWN_PROVIDERS[url] = new_class
         return new_class
 
 

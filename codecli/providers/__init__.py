@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from codecli.providers.base import KNOW_PROVIDERS
+from codecli.providers.base import KNOWN_PROVIDERS
 
 _instance = None
 
@@ -21,7 +21,7 @@ def get_remote_repo_git_url(remote):
 def get_git_service_provider():
     global _instance
     if _instance is None:
-        for url, sub_class in KNOW_PROVIDERS.iteritems():
+        for url, sub_class in KNOWN_PROVIDERS.iteritems():
             giturl = get_remote_repo_git_url('origin')
             if url in giturl:
                 _instance = sub_class()
