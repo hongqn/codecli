@@ -51,13 +51,19 @@ class GithubProvider(GitServiceProvider):
 
         return 'https://github.com/%s.git' % repo_name
 
-    def get_username(self):
-        email = utils.get_config('user.email')
-        payload = json.loads(urllib.urlopen(
+    def search_username(self):
+        email = utils.get_user_email()
+        payload = json.load(urllib.urlopen(
             "https://api.github.com/search/users?" +
-            urllib.urlencode(dict(q=email))
-            ))
+            urllib.urlencode(dict(q=email))))
         return payload['items'][0]['login'] if payload['total_count'] else ''
 
+    def get_username(self):
+        return utils.get_config('user.name') or utils.get_user_name()
+
     def merge_config(self):
-        pass
+        user_name = utils.get_config('user.name')
+        if not user_name:
+            user_name = self.search_username()
+            if user_name:
+                utils.set_config('user.name', user_name)

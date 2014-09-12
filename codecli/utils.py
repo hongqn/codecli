@@ -139,6 +139,13 @@ def get_user_name():
     return name
 
 
+def get_user_email():
+    name = get_config('user.email')
+    if not name:
+        name = getoutput(['git', 'config', 'user.email']).strip()
+    return name
+
+
 def get_code_username():
     from codecli.providers import get_git_service_provider, NoProviderFound
     try:
