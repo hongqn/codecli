@@ -5,7 +5,6 @@ import sys
 import re
 from subprocess import check_call as _check_call, call as _call, Popen, PIPE
 from contextlib import contextmanager
-from getpass import getuser
 import webbrowser
 
 
@@ -69,9 +68,10 @@ def log_error(msg):
     print >>sys.stderr, red(msg)
 
 
-def repo_git_url(repo_name, login_user=''):
+def repo_git_url(repo_name, login_user='', provider=None):
     from codecli.providers import get_git_service_provider
-    return get_git_service_provider().get_repo_git_url(repo_name, login_user)
+    return get_git_service_provider(force_provider=provider).\
+        get_repo_git_url(repo_name, login_user)
 
 
 @contextmanager
@@ -128,23 +128,8 @@ def merge_config():
     Will prompt for email and name if they do not exist in ~/.codecli.conf.
 
     """
-    email = get_config('user.email')
-    if not email:
-        email = getoutput(['git', 'config', 'user.email']).strip()
-        if not email.endswith('@douban.com'):
-            email = '%s@douban.com' % getuser()
-        email = input("Please enter your @douban.com email [%s]: " % email,
-                      default=email)
-        set_config('user.email', email)
-
-    name = get_user_name()
-    if not name:
-        name = email.split('@')[0]
-        name = input("Please enter your name [%s]: " % name, default=name)
-        set_config('user.name', name)
-
-    for key, value in iter_config():
-        check_call(['git', 'config', key, value])
+    from codecli.providers import get_git_service_provider
+    return get_git_service_provider().merge_config()
 
 
 def get_user_name():
@@ -155,8 +140,11 @@ def get_user_name():
 
 
 def get_code_username():
-    email = get_config('user.email')
-    return email.split('@')[0] if email and email.endswith('@douban.com') else None
+    from codecli.providers import get_git_service_provider, NoProviderFound
+    try:
+        return get_git_service_provider().get_username()
+    except NoProviderFound:
+        return None
 
 
 def getoutput(cmd):

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import re
+import json
+import urllib
 
 import codecli.utils as utils
 from codecli.providers.base import GitServiceProvider
@@ -48,3 +50,14 @@ class GithubProvider(GitServiceProvider):
             return repo_name
 
         return 'https://github.com/%s.git' % repo_name
+
+    def get_username(self):
+        email = utils.get_config('user.email')
+        payload = json.loads(urllib.urlopen(
+            "https://api.github.com/search/users?" +
+            urllib.urlencode(dict(q=email))
+            ))
+        return payload['items'][0]['login'] if payload['total_count'] else ''
+
+    def merge_config(self):
+        pass

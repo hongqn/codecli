@@ -2,6 +2,7 @@
 
 import re
 import urllib
+from getpass import getuser
 
 import codecli.utils as utils
 from codecli.providers.base import GitServiceProvider
@@ -51,3 +52,27 @@ class CodeProvider(GitServiceProvider):
             login_user = login_user + '@'
         CODE_ADDR = 'code.dapps.douban.com'
         return 'http://%s%s/%s.git' % (login_user, CODE_ADDR, repo_name)
+
+    def get_username(self):
+        email = utils.get_config('user.email')
+        return email.split('@')[0] if email and email.endswith('@douban.com') else None
+
+    def merge_config(self):
+        email = utils.get_config('user.email')
+        if not email:
+            email = utils.getoutput(['git', 'config', 'user.email']).strip()
+            if not email.endswith('@douban.com'):
+                email = '%s@douban.com' % getuser()
+            email = utils.input(
+                "Please enter your @douban.com email [%s]: " % email,
+                default=email)
+            utils.set_config('user.email', email)
+
+        name = utils.get_user_name()
+        if not name:
+            name = email.split('@')[0]
+            name = input("Please enter your name [%s]: " % name, default=name)
+            utils.set_config('user.name', name)
+
+        for key, value in utils.iter_config():
+            utils.check_call(['git', 'config', key, value])

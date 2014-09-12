@@ -28,6 +28,15 @@ class GitServiceProvider(object):
     def get_remote_repo_url(self, remote):
         raise NotImplementedError
 
+    def get_repo_git_url(self, repo_name, login_user=''):
+        raise NotImplementedError
+
+    def get_username(self):
+        raise NotImplementedError
+
+    def merge_config(self):
+        raise NotImplementedError
+
 GitServiceProvider = ProviderMeta(
     'GitServiceProvider', (GitServiceProvider,), {})
 
