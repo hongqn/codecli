@@ -2,7 +2,7 @@
 
 import re
 
-from codecli.utils import print_log, browser_open, getoutput
+import codecli.utils as utils
 from codecli.providers.base import GitServiceProvider
 
 
@@ -16,8 +16,8 @@ class GithubProvider(GitServiceProvider):
         url = "https://github.com/%s/compare/%s:%s...%s:%s?expand=1" % (
             head_repo, base_user, base_ref, head_user, head_ref)
 
-        print_log("goto " + url)
-        browser_open(url)
+        utils.print_log("goto " + url)
+        utils.browser_open(url)
 
     def get_remote_repo_name(self, remote):
         repourl = self.get_remote_repo_url(remote)
@@ -27,7 +27,7 @@ class GithubProvider(GitServiceProvider):
         return reponame
 
     def get_remote_repo_url(self, remote):
-        for line in getoutput(['git', 'remote', '-v']).splitlines():
+        for line in utils.getoutput(['git', 'remote', '-v']).splitlines():
             words = line.split()
             if words[0] == remote and words[-1] == '(push)':
                 giturl = words[1]

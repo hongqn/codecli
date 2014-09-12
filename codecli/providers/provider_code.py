@@ -3,7 +3,7 @@
 import re
 import urllib
 
-from codecli.utils import print_log, browser_open, getoutput
+import codecli.utils as utils
 from codecli.providers.base import GitServiceProvider
 
 
@@ -15,8 +15,8 @@ class CodeProvider(GitServiceProvider):
         url = (('http://code.dapps.douban.com/%s/newpull/new?' % head_repo) +
                urllib.urlencode(dict(head_ref=head_ref, base_ref=base_ref,
                                      base_repo=base_repo)))
-        print_log("goto " + url)
-        browser_open(url)
+        utils.print_log("goto " + url)
+        utils.browser_open(url)
 
     def get_remote_repo_name(self, remote):
         repourl = self.get_remote_repo_url(remote)
@@ -28,7 +28,7 @@ class CodeProvider(GitServiceProvider):
         return reponame
 
     def get_remote_repo_url(self, remote):
-        for line in getoutput(['git', 'remote', '-v']).splitlines():
+        for line in utils.getoutput(['git', 'remote', '-v']).splitlines():
             words = line.split()
             if words[0] == remote and words[-1] == '(push)':
                 giturl = words[1]
