@@ -147,11 +147,14 @@ def get_user_email():
 
 
 def get_code_username():
-    from codecli.providers import get_git_service_provider, NoProviderFound
-    try:
-        return get_git_service_provider().get_username()
-    except NoProviderFound:
-        return None
+    user_name = get_config('user.name')
+    if not user_name:
+        from codecli.providers import get_git_service_provider, NoProviderFound
+        try:
+            user_name = get_git_service_provider().get_username()
+        except NoProviderFound:
+            return None
+    return user_name
 
 
 def getoutput(cmd):

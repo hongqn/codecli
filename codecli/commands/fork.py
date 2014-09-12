@@ -26,7 +26,8 @@ def main(args):
         if not code_username:
             log_error('origin not specified')
             return 1
-        args.origin = '%s/%s' % (code_username, name)
+        repo_name = name.split('/')[-1]
+        args.origin = '%s/%s' % (code_username, repo_name)
 
     if not args.dir:
         args.dir = name.rsplit('/')[-1]
