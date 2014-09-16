@@ -5,8 +5,6 @@ import sys
 import re
 from subprocess import check_call as _check_call, call as _call, Popen, PIPE
 from contextlib import contextmanager
-from getpass import getuser
-import urllib
 import webbrowser
 
 
@@ -70,14 +68,10 @@ def log_error(msg):
     print >>sys.stderr, red(msg)
 
 
-def repo_git_url(repo_name, login_user=''):
-    if '://' in repo_name:
-        return repo_name
-
-    if login_user:
-        login_user = login_user + '@'
-    CODE_ADDR = 'code.dapps.douban.com'
-    return 'http://%s%s/%s.git' % (login_user, CODE_ADDR, repo_name)
+def repo_git_url(repo_name, login_user='', provider=None):
+    from codecli.providers import get_git_service_provider
+    return get_git_service_provider(force_provider=provider).\
+        get_repo_git_url(repo_name, login_user)
 
 
 @contextmanager
@@ -134,23 +128,8 @@ def merge_config():
     Will prompt for email and name if they do not exist in ~/.codecli.conf.
 
     """
-    email = get_config('user.email')
-    if not email:
-        email = getoutput(['git', 'config', 'user.email']).strip()
-        if not email.endswith('@douban.com'):
-            email = '%s@douban.com' % getuser()
-        email = input("Please enter your @douban.com email [%s]: " % email,
-                      default=email)
-        set_config('user.email', email)
-
-    name = get_user_name()
-    if not name:
-        name = email.split('@')[0]
-        name = input("Please enter your name [%s]: " % name, default=name)
-        set_config('user.name', name)
-
-    for key, value in iter_config():
-        check_call(['git', 'config', key, value])
+    from codecli.providers import get_git_service_provider
+    return get_git_service_provider().merge_config()
 
 
 def get_user_name():
@@ -160,9 +139,22 @@ def get_user_name():
     return name
 
 
+def get_user_email():
+    name = get_config('user.email')
+    if not name:
+        name = getoutput(['git', 'config', 'user.email']).strip()
+    return name
+
+
 def get_code_username():
-    email = get_config('user.email')
-    return email.split('@')[0] if email and email.endswith('@douban.com') else None
+    user_name = get_config('user.name')
+    if not user_name:
+        from codecli.providers import get_git_service_provider, NoProviderFound
+        try:
+            user_name = get_git_service_provider().get_username()
+        except NoProviderFound:
+            return None
+    return user_name
 
 
 def getoutput(cmd):
@@ -179,38 +171,19 @@ def get_branches(include_remotes=False):
 
 
 def get_remote_repo_url(remote):
-    for line in getoutput(['git', 'remote', '-v']).splitlines():
-        words = line.split()
-        if words[0] == remote and words[-1] == '(push)':
-            giturl = words[1]
-            break
-    else:
-        raise Exception("no remote %s found" % remote)
-
-    giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
-    assert (re.match(r"^http://([a-zA-Z0-9]+@)?code.dapps.douban.com/.+\.git$", giturl) or
-            re.match(r"^git@code.(intra|dapps).douban.com:.+\.git$", giturl)), \
-        "This url do not look like code dapps git repo url: %s" % giturl
-    repourl = giturl[: -len('.git')]
-    return repourl
+    from codecli.providers import get_git_service_provider
+    return get_git_service_provider().get_remote_repo_url(remote)
 
 
 def get_remote_repo_name(remote):
-    repourl = get_remote_repo_url(remote)
-    _, _, reponame = repourl.partition('code.dapps.douban.com/')
-    if not reponame:
-        _, _, reponame = repourl.partition('code.intra.douban.com:')
-    if not reponame:
-        _, _, reponame = repourl.partition('code.dapps.douban.com:')
-    return reponame
+    from codecli.providers import get_git_service_provider
+    return get_git_service_provider().get_remote_repo_name(remote)
 
 
 def send_pullreq(head_repo, head_ref, base_repo, base_ref):
-    url = (('http://code.dapps.douban.com/%s/newpull/new?' % head_repo) +
-           urllib.urlencode(dict(head_ref=head_ref, base_ref=base_ref,
-                                 base_repo=base_repo)))
-    print_log("goto " + url)
-    browser_open(url)
+    from codecli.providers import get_git_service_provider
+    return get_git_service_provider().send_pullreq(
+        head_repo, head_ref, base_repo, base_ref)
 
 
 def browser_open(url):
