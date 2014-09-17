@@ -157,8 +157,9 @@ def get_code_username():
     return user_name
 
 
-def getoutput(cmd):
-    stdout, stderr = Popen(cmd, stdout=PIPE).communicate()
+def getoutput(cmd, **kwargs):
+    stdout, stderr = Popen(cmd, stdout=PIPE, stderr=open(os.devnull, 'w'),
+                           **kwargs).communicate()
     return stdout[:-1] if stdout[-1:] == '\n' else stdout
 
 
@@ -213,13 +214,7 @@ red = _wrap_with('31')
 green = _wrap_with('32')
 
 
-def is_under_git_repo(path):
+def is_under_git_repo(path=None):
     """ Check if the given path is under a git repo
     """
-
-    path = os.path.abspath(path)
-    while path != '/':
-        if os.path.isdir(os.path.join(path, '.git')):
-            return True
-        path = os.path.split(path)[0]
-    return False
+    return getoutput(['git', 'rev-parse', '--is-inside-work-tree'], cwd=path) == 'true'
