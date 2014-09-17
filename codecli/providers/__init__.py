@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import re
 from codecli.providers.base import KNOWN_PROVIDERS
 
@@ -11,7 +12,11 @@ class NoProviderFound(Exception):
 
 
 def current_repo_git_url(remote):
-    from codecli.utils import getoutput
+    from codecli.utils import getoutput, is_under_git_repo
+
+    if not is_under_git_repo(os.path.curdir):
+        raise NoProviderFound("It is not under a git repo")
+
     for line in getoutput(['git', 'remote', '-v']).splitlines():
         words = line.split()
         if words[0] == remote and words[-1] == '(push)':

@@ -211,3 +211,15 @@ def _wrap_with(code):
 
 red = _wrap_with('31')
 green = _wrap_with('32')
+
+
+def is_under_git_repo(path):
+    """ Check if the given path is under a git repo
+    """
+
+    path = os.path.abspath(path)
+    while path != '/':
+        if os.path.isdir(os.path.join(path, '.git')):
+            return True
+        path = os.path.split(path)[0]
+    return False
