@@ -157,6 +157,11 @@ def get_code_username():
     return user_name
 
 
+def get_default_provider():
+    provider = get_config('provider.name')
+    return provider or 'code'
+
+
 def getoutput(cmd, **kwargs):
     stdout, stderr = Popen(cmd, stdout=PIPE, stderr=open(os.devnull, 'w'),
                            **kwargs).communicate()
