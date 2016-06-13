@@ -1,5 +1,6 @@
 from codecli.utils import (check_call, repo_git_url, cd, merge_config,
-                           print_log, get_code_username, log_error)
+                           print_log, get_code_username, get_default_provider,
+                           log_error)
 
 
 def populate_argument_parser(parser):
@@ -13,8 +14,9 @@ def populate_argument_parser(parser):
         parser.add_argument('origin',
                             help="name of my fork [e.g.  hongqn/dae]")
     parser.add_argument('dir', nargs='?', help="directory to clone")
-    parser.add_argument('-p', '--provider', default='code',
-                        help="Git service provider code/github. [code]")
+    provider = get_default_provider()
+    parser.add_argument('-p', '--provider', default=provider,
+                        help="Git service provider code/github. [%s]" % provider)
 
 
 def main(args):
