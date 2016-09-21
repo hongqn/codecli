@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 
 # package meta info
 NAME = "CodeCLI"
-VERSION = "0.1"
-DESCRIPTION = "A command line tool for CODE"
+VERSION = "1.0"
+DESCRIPTION = "A command line tool for github"
 AUTHOR = "Qiangning Hong"
 AUTHOR_EMAIL = "hongqn@gmail.com"
 LICENSE = "BSD"
