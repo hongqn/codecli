@@ -20,13 +20,15 @@ def main():
         ('clone', 'clone', "Clone a repository to local"),
         ('fetch', 'fetch', "Set remote and fetch other user's fork"),
         ('end', 'end', "Delete branch locally and on origin remote"),
-        ('merge', 'merge', "Merge an upstream branch to another upstream branch"),
+        ('merge', 'merge',
+         "Merge an upstream branch to another upstream branch"),
     ]
 
     for command, module_name, help_text in subcommands:
         try:
-            module = __import__('codecli.commands.' + module_name, globals(), locals(),
-                                ['populate_argument_parser', 'main'])
+            module = __import__(
+                'codecli.commands.' + module_name, globals(), locals(),
+                ['populate_argument_parser', 'main'])
         except ImportError:
             import traceback
             traceback.print_exc()

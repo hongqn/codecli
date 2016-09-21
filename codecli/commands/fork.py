@@ -15,8 +15,9 @@ def populate_argument_parser(parser):
                             help="name of my fork [e.g.  hongqn/dae]")
     parser.add_argument('dir', nargs='?', help="directory to clone")
     provider = get_default_provider()
-    parser.add_argument('-p', '--provider', default=provider,
-                        help="Git service provider code/github. [%s]" % provider)
+    parser.add_argument(
+        '-p', '--provider', default=provider,
+        help="Git service provider code/github. [%s]" % provider)
 
 
 def main(args):
@@ -33,7 +34,8 @@ def main(args):
 
     if not args.dir:
         args.dir = name.rsplit('/')[-1]
-        print_log("Destination dir is not specified, will use {}".format(args.dir))
+        print_log(
+            "Destination dir is not specified, will use {}".format(args.dir))
 
     check_call(['git', 'clone', repo_git_url(
         args.origin, login_user=code_username, provider=args.provider

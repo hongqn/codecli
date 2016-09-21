@@ -1,6 +1,7 @@
 from mock import patch, Mock
 import codecli.commands.fetch as M
 
+
 def test_fetch_should_add_remote_and_fetch():
     args = Mock(username='testuser')
     with patch.object(M, 'getoutput') as mock_getoutput, \

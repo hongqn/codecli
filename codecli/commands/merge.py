@@ -1,5 +1,5 @@
 from codecli.utils import check_call, send_pullreq, get_remote_repo_name, \
-        get_branches, input
+        get_branches, ask
 
 
 def populate_argument_parser(parser):
@@ -24,11 +24,11 @@ def merge_and_push(from_branch, to_branch):
     existing_branches = get_branches()
     answer = 'd'
     if local_branch in existing_branches:
-        answer = input("Branch {0} exists.  Should I (d)estroy it and "
-                       "re-merge from scratch, or re(u)se it in case you "
-                       "were resolving merge conflicts just now? (D/u) "
-                       .format(local_branch), pattern=r'[dDuU]',
-                       default='d').lower()[0]
+        answer = ask("Branch {0} exists.  Should I (d)estroy it and "
+                     "re-merge from scratch, or re(u)se it in case you "
+                     "were resolving merge conflicts just now? (D/u) "
+                     .format(local_branch), pattern=r'[dDuU]',
+                     default='d').lower()[0]
 
     if answer == 'd':
         check_call(['git', 'checkout',

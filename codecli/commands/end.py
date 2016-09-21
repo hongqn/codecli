@@ -1,11 +1,12 @@
 import subprocess
 
 from codecli.utils import (check_call, get_branches, get_current_branch_name,
-                           merge_with_base, log_error, input)
+                           merge_with_base, log_error, ask)
 
 
 def populate_argument_parser(parser):
-    parser.add_argument('branches', nargs='*', help="[default: current branch]")
+    parser.add_argument('branches', nargs='*',
+                        help="[default: current branch]")
     parser.add_argument('-f', '--force', action='store_true',
                         help="force branch deletion even if not "
                         "fully merged (git branch -D)")
@@ -35,8 +36,8 @@ def end_branch(branch, force):
         except subprocess.CalledProcessError:
             log_error("Failed to delete branch %s because it is not fully "
                       "merged (may cause commits loss)." % branch)
-            answer = input("Do you want to force to delete it even so? (y/N) ",
-                           pattern=r'[nNyY].*', default='n')
+            answer = ask("Do you want to force to delete it even so? (y/N) ",
+                         pattern=r'[nNyY].*', default='n')
             if answer[0] in 'yY':
                 check_call(['git', 'branch', '-D', branch])
             else:

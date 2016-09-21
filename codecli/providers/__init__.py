@@ -31,12 +31,14 @@ def get_git_service_provider(force_provider=None):
     global _instance
 
     if force_provider is not None:
-        chooser = lambda url: force_provider in url
+        def chooser(url):
+            return force_provider in url
     else:
-        chooser = lambda url: url in current_repo_git_url('origin')
+        def chooser(url):
+            return url in current_repo_git_url('origin')
 
     if _instance is None:
-        for url, sub_class in KNOWN_PROVIDERS.iteritems():
+        for url, sub_class in KNOWN_PROVIDERS.items():
             if chooser(url):
                 _instance = sub_class()
                 break

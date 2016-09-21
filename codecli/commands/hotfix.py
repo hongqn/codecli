@@ -2,8 +2,9 @@ from codecli.utils import check_call
 
 
 def populate_argument_parser(parser):
-    parser.add_argument('start_point', default='release',
-                        help="branch to start hotfix from [default: %(default)s]")
+    parser.add_argument(
+        'start_point', default='release',
+        help="branch to start hotfix from [default: %(default)s]")
     parser.add_argument('issue', help="a short name for the hotfix")
 
 

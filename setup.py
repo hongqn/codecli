@@ -14,16 +14,23 @@ CLASSIFIERS = []
 
 # package contents
 MODULES = []
-PACKAGES = find_packages(exclude=['tests.*', 'tests', 'examples.*', 'examples'])
+PACKAGES = find_packages(exclude=[
+    'tests.*', 'tests', 'examples.*', 'examples'])
 ENTRY_POINTS = """
 [console_scripts]
 code = codecli:main
 """
 
 # dependencies
-INSTALL_REQUIRES = []
-TESTS_REQUIRE = ['nose', 'mock']
-TEST_SUITE = 'nose.collector'
+INSTALL_REQUIRES = [
+    "six",
+]
+SETUP_REQUIRES = [
+    'pytest-runner',
+]
+TESTS_REQUIRE = [
+    'nose',
+]
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -51,6 +58,6 @@ setup(
     zip_safe=False,
     entry_points=ENTRY_POINTS,
     install_requires=INSTALL_REQUIRES,
+    setup_requires=SETUP_REQUIRES,
     tests_require=TESTS_REQUIRE,
-    test_suite=TEST_SUITE,
 )

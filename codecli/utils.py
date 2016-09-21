@@ -7,6 +7,9 @@ from subprocess import check_call as _check_call, call as _call, Popen, PIPE
 from contextlib import contextmanager
 import webbrowser
 
+from six.moves import input
+from six import string_types, print_
+
 
 def get_current_branch_name():
     output = getoutput(['git', 'symbolic-ref', 'HEAD'])
@@ -49,23 +52,23 @@ def merge_with_base(branch, rebase=False, remote='upstream',
 
 
 def check_call(cmd, *args, **kwargs):
-    cmdstr = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
+    cmdstr = cmd if isinstance(cmd, string_types) else ' '.join(cmd)
     print_log(cmdstr)
     return _check_call(cmd, *args, **kwargs)
 
 
 def call(cmd, *args, **kwargs):
-    cmdstr = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
+    cmdstr = cmd if isinstance(cmd, string_types) else ' '.join(cmd)
     print_log(cmdstr)
     return _call(cmd, *args, **kwargs)
 
 
 def print_log(outstr):
-    print >>sys.stderr, green(outstr)
+    print_(green(outstr), file=sys.stderr)
 
 
 def log_error(msg):
-    print >>sys.stderr, red(msg)
+    print_(red(msg), file=sys.stderr)
 
 
 def repo_git_url(repo_name, login_user='', provider=None):
@@ -84,9 +87,9 @@ def cd(path):
         os.chdir(cwd)
 
 
-def input(prompt, pattern=r'.*', default=''):
+def ask(prompt, pattern=r'.*', default=''):
     while True:
-        answer = raw_input(green(prompt))
+        answer = input(green(prompt))
 
         if not answer and default:
             return default
@@ -163,8 +166,8 @@ def get_default_provider():
 
 
 def getoutput(cmd, **kwargs):
-    stdout, stderr = Popen(cmd, stdout=PIPE, stderr=open(os.devnull, 'w'),
-                           **kwargs).communicate()
+    stdout, stderr = Popen(cmd, stdout=PIPE, stderr=open(os.devnull, 'wb'),
+                           universal_newlines=True, **kwargs).communicate()
     return stdout[:-1] if stdout[-1:] == '\n' else stdout
 
 
@@ -222,4 +225,5 @@ green = _wrap_with('32')
 def is_under_git_repo(path=None):
     """ Check if the given path is under a git repo
     """
-    return getoutput(['git', 'rev-parse', '--is-inside-work-tree'], cwd=path) == 'true'
+    return getoutput(['git', 'rev-parse', '--is-inside-work-tree'],
+                     cwd=path) == 'true'
