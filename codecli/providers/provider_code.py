@@ -71,7 +71,7 @@ class CodeProvider(GitServiceProvider):
         name = utils.get_user_name()
         if not name:
             name = email.split('@')[0]
-            name = ask("Please enter your name [%s]: " % name, default=name)
+            name = utils.ask("Please enter your name [%s]: " % name, default=name)
             utils.set_config('user.name', name)
 
         for key, value in utils.iter_config():
