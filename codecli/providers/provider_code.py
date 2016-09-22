@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
-import urllib
 from getpass import getuser
+
+from six.moves.urllib.parse import urlencode
 
 import codecli.utils as utils
 from codecli.providers.base import GitServiceProvider
@@ -14,8 +15,7 @@ class CodeProvider(GitServiceProvider):
     def send_pullreq(self, head_repo, head_ref, base_repo, base_ref):
 
         url = (('http://code.dapps.douban.com/%s/newpull/new?' % head_repo) +
-               urllib.urlencode(dict(head_ref=head_ref, base_ref=base_ref,
-                                     base_repo=base_repo)))
+               urlencode(dict(head_ref=head_ref, base_ref=base_ref, base_repo=base_repo)))
         utils.print_log("goto " + url)
         utils.browser_open(url)
 

@@ -5,3 +5,6 @@
 /build/
 /dist/
 .ropeproject
+/.cache/
+/.eggs/
+/.tox/

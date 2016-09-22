@@ -2,7 +2,9 @@
 
 import re
 import json
-import urllib
+
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.request import urlopen
 
 import codecli.utils as utils
 from codecli.providers.base import GitServiceProvider
@@ -53,9 +55,8 @@ class GithubProvider(GitServiceProvider):
 
     def search_username(self):
         email = utils.get_user_email()
-        payload = json.load(urllib.urlopen(
-            "https://api.github.com/search/users?" +
-            urllib.urlencode(dict(q=email))))
+        payload = json.load(urlopen(
+            "https://api.github.com/search/users?" + urlencode(dict(q=email))))
         return payload['items'][0]['login'] if payload['total_count'] else ''
 
     def get_username(self):

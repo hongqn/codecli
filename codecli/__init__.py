@@ -3,6 +3,8 @@
 import sys
 import logging
 
+from six import print_
+
 
 def main():
     from argparse import ArgumentParser
@@ -32,7 +34,7 @@ def main():
         except ImportError:
             import traceback
             traceback.print_exc()
-            print >>sys.stderr, "Can not import command %s, skip it" % command
+            print_("Can not import command %s, skip it" % command, file=sys.stderr)
             continue
 
         subparser = subparsers.add_parser(command, description=help_text)
