@@ -12,7 +12,7 @@ from six import string_types, print_
 def get_current_branch_name():
     output = getoutput(['git', 'symbolic-ref', 'HEAD'])
     assert output.startswith('refs/heads/')
-    return output[len('refs/heads/'):]
+    return output[len('refs/heads/') :]
 
 
 def remote_and_pr_id_from_pr_branch(branch):
@@ -30,23 +30,23 @@ def get_base_branch(branch, remote='upstream', remote_branch=None):
         base_branch = branch.split('-')[1]
         return remote, [], base_branch
 
-    if branch.startswith('pr/'):
+    if branch.startswith('pr/') and remote_branch is None:
         remote, pr_id = remote_and_pr_id_from_pr_branch(branch)
         ref = 'pr/{1}'.format(remote, pr_id)
-        fetch_args = ['+refs/pull/{0}/head:refs/remotes/{1}/{2}'.format(
-            pr_id, remote, ref)]
+        fetch_args = [
+            '+refs/pull/{0}/head:refs/remotes/{1}/{2}'.format(pr_id, remote, ref)
+        ]
         return remote, fetch_args, ref
 
     return remote, [], remote_branch or 'master'
 
 
-def merge_with_base(branch, rebase=False, remote='upstream',
-                    remote_branch=None):
-    remote, fetch_args, baseref = get_base_branch(branch, remote=remote,
-                                                  remote_branch=remote_branch)
+def merge_with_base(branch, rebase=False, remote='upstream', remote_branch=None):
+    remote, fetch_args, baseref = get_base_branch(
+        branch, remote=remote, remote_branch=remote_branch
+    )
     check_call(['git', 'fetch', remote] + fetch_args)
-    check_call(['git', 'rebase' if rebase else 'merge',
-                '%s/%s' % (remote, baseref)])
+    check_call(['git', 'rebase' if rebase else 'merge', '%s/%s' % (remote, baseref)])
 
 
 def check_call(cmd, *args, **kwargs):
@@ -71,8 +71,10 @@ def log_error(msg):
 
 def repo_git_url(repo_name, login_user='', provider=None):
     from codecli.providers import get_git_service_provider
-    return get_git_service_provider(force_provider=provider).\
-        get_repo_git_url(repo_name, login_user)
+
+    return get_git_service_provider(force_provider=provider).get_repo_git_url(
+        repo_name, login_user
+    )
 
 
 @contextmanager
@@ -113,8 +115,9 @@ def del_config(key):
 
 
 def iter_config():
-    for line in getoutput(['git', 'config', '-f', get_config_path(),
-                           '--list']).splitlines():
+    for line in getoutput(
+        ['git', 'config', '-f', get_config_path(), '--list']
+    ).splitlines():
         line = line.strip()
         if not line:
             continue
@@ -130,6 +133,7 @@ def merge_config():
 
     """
     from codecli.providers import get_git_service_provider
+
     return get_git_service_provider().merge_config()
 
 
@@ -151,6 +155,7 @@ def get_code_username():
     user_name = get_config('user.name')
     if not user_name:
         from codecli.providers import get_git_service_provider, NoProviderFound
+
         try:
             user_name = get_git_service_provider().get_username()
         except NoProviderFound:
@@ -164,8 +169,13 @@ def get_default_provider():
 
 
 def getoutput(cmd, **kwargs):
-    stdout, stderr = Popen(cmd, stdout=PIPE, stderr=open(os.devnull, 'wb'),
-                           universal_newlines=True, **kwargs).communicate()
+    stdout, stderr = Popen(
+        cmd,
+        stdout=PIPE,
+        stderr=open(os.devnull, 'wb'),
+        universal_newlines=True,
+        **kwargs
+    ).communicate()
     return stdout[:-1] if stdout[-1:] == '\n' else stdout
 
 
@@ -179,18 +189,28 @@ def get_branches(include_remotes=False):
 
 def get_remote_repo_url(remote):
     from codecli.providers import get_git_service_provider
+
     return get_git_service_provider().get_remote_repo_url(remote)
 
 
 def get_remote_repo_name(remote):
     from codecli.providers import get_git_service_provider
+
     return get_git_service_provider().get_remote_repo_name(remote)
 
 
 def send_pullreq(head_repo, head_ref, base_repo, base_ref):
     from codecli.providers import get_git_service_provider
+
     return get_git_service_provider().send_pullreq(
-        head_repo, head_ref, base_repo, base_ref)
+        head_repo, head_ref, base_repo, base_ref
+    )
+
+
+def get_pullinfo(repo, pr_id):
+    from codecli.providers import get_git_service_provider
+
+    return get_git_service_provider().get_pullinfo(repo, pr_id)
 
 
 def browser_open(url):
@@ -208,13 +228,14 @@ def browser_open(url):
 
 
 def _wrap_with(code):
-
     def inner(text, bold=False):
         c = code
         if bold:
             c = "1;%s" % c
         return "\033[%sm%s\033[0m" % (c, text)
+
     return inner
+
 
 red = _wrap_with('31')
 green = _wrap_with('32')
@@ -223,5 +244,4 @@ green = _wrap_with('32')
 def is_under_git_repo(path=None):
     """ Check if the given path is under a git repo
     """
-    return getoutput(['git', 'rev-parse', '--is-inside-work-tree'],
-                     cwd=path) == 'true'
+    return getoutput(['git', 'rev-parse', '--is-inside-work-tree'], cwd=path) == 'true'

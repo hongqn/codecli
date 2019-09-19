@@ -37,13 +37,17 @@ class GitServiceProvider(object):
     def merge_config(self):
         raise NotImplementedError
 
-GitServiceProvider = ProviderMeta(
-    'GitServiceProvider', (GitServiceProvider,), {})
+    def get_pullinfo(self, repo, pr_id):
+        raise NotImplementedError
+
+
+GitServiceProvider = ProviderMeta('GitServiceProvider', (GitServiceProvider,), {})
 
 
 providers = glob.glob(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "provider_*.py"))
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "provider_*.py")
+)
 
 for each in providers:
-    import_path = ".." + os.path.basename(each)[:-len('.py')]
+    import_path = ".." + os.path.basename(each)[: -len('.py')]
     importlib.import_module(import_path, __name__)

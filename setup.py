@@ -26,7 +26,6 @@ INSTALL_REQUIRES = [
     "six",
 ]
 SETUP_REQUIRES = [
-    'pytest-runner',
 ]
 TESTS_REQUIRE = [
     'nose',
