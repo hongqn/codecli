@@ -165,7 +165,7 @@ def get_code_username():
 
 def get_default_provider():
     provider = get_config('provider.name')
-    return provider or 'code'
+    return provider or 'github'
 
 
 def getoutput(cmd, **kwargs):
