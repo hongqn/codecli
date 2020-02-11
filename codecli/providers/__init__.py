@@ -31,9 +31,12 @@ def get_git_service_provider(force_provider=None):
     global _instance
 
     if force_provider is not None:
+
         def chooser(url):
             return force_provider in url
+
     else:
+
         def chooser(url):
             return url in current_repo_git_url('origin')
 

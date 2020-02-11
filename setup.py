@@ -14,8 +14,7 @@ CLASSIFIERS = []
 
 # package contents
 MODULES = []
-PACKAGES = find_packages(exclude=[
-    'tests.*', 'tests', 'examples.*', 'examples'])
+PACKAGES = find_packages(exclude=['tests.*', 'tests', 'examples.*', 'examples'])
 ENTRY_POINTS = """
 [console_scripts]
 code = codecli:main
@@ -25,8 +24,7 @@ code = codecli:main
 INSTALL_REQUIRES = [
     "six",
 ]
-SETUP_REQUIRES = [
-]
+SETUP_REQUIRES = []
 TESTS_REQUIRE = [
     'nose',
 ]
@@ -39,6 +37,7 @@ def read_long_description(filename):
     if os.path.exists(path):
         return open(path).read()
     return ""
+
 
 setup(
     name=NAME,

@@ -1,5 +1,10 @@
-from codecli.utils import (check_call, repo_git_url, cd, merge_config,
-                           get_default_provider)
+from codecli.utils import (
+    check_call,
+    repo_git_url,
+    cd,
+    merge_config,
+    get_default_provider,
+)
 
 
 def populate_argument_parser(parser):
@@ -7,8 +12,11 @@ def populate_argument_parser(parser):
     parser.add_argument('dir', nargs='?', help="directory to clone to")
     provider = get_default_provider()
     parser.add_argument(
-        '-p', '--provider', default=provider,
-        help="Git service provider code/github. [%s]" % provider)
+        '-p',
+        '--provider',
+        default=provider,
+        help="Git service provider code/github. [%s]" % provider,
+    )
 
 
 def main(args):

@@ -18,7 +18,12 @@ class GithubProvider(GitServiceProvider):
         base_user, _ = base_repo.split("/")
 
         url = "https://github.com/%s/compare/%s:%s...%s:%s?expand=1" % (
-            head_repo, base_user, base_ref, head_user, head_ref)
+            head_repo,
+            base_user,
+            base_ref,
+            head_user,
+            head_ref,
+        )
 
         utils.print_log("goto " + url)
         utils.browser_open(url)
@@ -41,9 +46,9 @@ class GithubProvider(GitServiceProvider):
 
         giturl = re.sub(r"(?<=http://).+:.+@", "", giturl)
 
-        assert (re.match(r"^git@github.com:.+\.git$", giturl) or
-                re.match(r"^https://github.com/.+\.git$", giturl)), \
-            "This url do not look like a github repo url: %s" % giturl
+        assert re.match(r"^git@github.com:.+\.git$", giturl) or re.match(
+            r"^https://github.com/.+\.git$", giturl
+        ), ("This url do not look like a github repo url: %s" % giturl)
         repourl = giturl[: -len('.git')]
         return repourl
 
@@ -55,8 +60,9 @@ class GithubProvider(GitServiceProvider):
 
     def search_username(self):
         email = utils.get_user_email()
-        payload = json.load(urlopen(
-            "https://api.github.com/search/users?" + urlencode(dict(q=email))))
+        payload = json.load(
+            urlopen("https://api.github.com/search/users?" + urlencode(dict(q=email)))
+        )
         return payload['items'][0]['login'] if payload['total_count'] else ''
 
     def get_username(self):

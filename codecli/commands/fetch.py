@@ -2,8 +2,7 @@ from codecli.utils import check_call, repo_git_url, getoutput
 
 
 def populate_argument_parser(parser):
-    parser.add_argument('username',
-                        help="username of another fork of this repo")
+    parser.add_argument('username', help="username of another fork of this repo")
 
 
 def main(args):

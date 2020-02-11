@@ -14,9 +14,11 @@ def main(args):
 def start(branch, remote='upstream', fetch_args=[], base_ref='upstream/master'):
     existing_branches = get_branches()
     if branch in existing_branches:
-        answer = ask("Branch %s exists, (s)witch to it or re(c)reate "
-                     "it?  (S/c) " % branch, pattern=r'[sScC]',
-                     default='s')
+        answer = ask(
+            "Branch %s exists, (s)witch to it or re(c)reate " "it?  (S/c) " % branch,
+            pattern=r'[sScC]',
+            default='s',
+        )
         answer = answer.lower()[0]
 
         if answer == 's':
