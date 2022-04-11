@@ -1,18 +1,25 @@
 import os
-import sys
 import re
-from subprocess import check_call as _check_call, call as _call, Popen, PIPE
-from contextlib import contextmanager
+import sys
 import webbrowser
+from contextlib import contextmanager
+from subprocess import PIPE, Popen
+from subprocess import call as _call
+from subprocess import check_call as _check_call
 
+from six import print_, string_types
 from six.moves import input
-from six import string_types, print_
 
 
 def get_current_branch_name():
     output = getoutput(['git', 'symbolic-ref', 'HEAD'])
     assert output.startswith('refs/heads/')
     return output[len('refs/heads/') :]
+
+
+def get_master_branch_name():
+    output = getoutput(['git', 'symbolic-ref', 'refs/remotes/origin/HEAD'])
+    return output.split('/')[-1]
 
 
 def remote_and_pr_id_from_pr_branch(branch):
@@ -154,7 +161,7 @@ def get_user_email():
 def get_code_username():
     user_name = get_config('user.name')
     if not user_name:
-        from codecli.providers import get_git_service_provider, NoProviderFound
+        from codecli.providers import NoProviderFound, get_git_service_provider
 
         try:
             user_name = get_git_service_provider().get_username()
@@ -242,6 +249,5 @@ green = _wrap_with('32')
 
 
 def is_under_git_repo(path=None):
-    """ Check if the given path is under a git repo
-    """
+    """Check if the given path is under a git repo"""
     return getoutput(['git', 'rev-parse', '--is-inside-work-tree'], cwd=path) == 'true'
