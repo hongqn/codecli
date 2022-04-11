@@ -1,5 +1,5 @@
-from codecli.utils import check_call, get_branches, ask
 from codecli.commands.end import end_branch
+from codecli.utils import ask, check_call, get_branches, get_master_branch_name
 
 
 def populate_argument_parser(parser):
@@ -11,7 +11,10 @@ def main(args):
     start(branch)
 
 
-def start(branch, remote='upstream', fetch_args=[], base_ref='upstream/master'):
+def start(branch, remote='upstream', fetch_args=[], base_ref=None):
+    if base_ref is None:
+        master = get_master_branch_name()
+        base_ref = f'upstream/{master}'
     existing_branches = get_branches()
     if branch in existing_branches:
         answer = ask(

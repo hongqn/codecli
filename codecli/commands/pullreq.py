@@ -1,17 +1,18 @@
 import codecli.commands.fetch
 from codecli.commands.start import start
 from codecli.utils import (
-    get_current_branch_name,
-    merge_with_base,
     check_call,
     get_base_branch,
-    get_remote_repo_name,
-    remote_and_pr_id_from_pr_branch,
-    send_pullreq as _send_pullreq,
-    print_log,
-    getoutput,
+    get_current_branch_name,
+    get_master_branch_name,
     get_pullinfo,
+    get_remote_repo_name,
+    getoutput,
+    merge_with_base,
+    print_log,
+    remote_and_pr_id_from_pr_branch,
 )
+from codecli.utils import send_pullreq as _send_pullreq
 
 
 def populate_argument_parser(parser):
@@ -71,8 +72,9 @@ def get_remote_and_remote_branch_from_target(target):
 
 def submit_new_pullreq(remote="upstream", remote_branch=None, no_merge=False):
     branch = get_current_branch_name()
-    if branch == "master":
-        print_log("Pull request should never be from master")
+    master = get_master_branch_name()
+    if branch == master:
+        print_log(f"Pull request should never be from {master}")
         return 1
 
     if not no_merge:
@@ -91,7 +93,8 @@ def push_to_my_fork(branch):
 
 def branch_is_published_already(branch):
     check_call(["git", "fetch", "origin"])
-    commits = getoutput(["git", "log", "--pretty=oneline", "master..%s" % branch])
+    master = get_master_branch_name()
+    commits = getoutput(["git", "log", "--pretty=oneline", f"{master}..{branch}"])
     if commits:
         log_line = commits.split("\n")[-1]
         first_ci = log_line.split()[0]

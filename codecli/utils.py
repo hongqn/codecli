@@ -45,7 +45,7 @@ def get_base_branch(branch, remote='upstream', remote_branch=None):
         ]
         return remote, fetch_args, ref
 
-    return remote, [], remote_branch or 'master'
+    return remote, [], remote_branch or get_master_branch_name()
 
 
 def merge_with_base(branch, rebase=False, remote='upstream', remote_branch=None):
