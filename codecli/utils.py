@@ -18,7 +18,9 @@ def get_current_branch_name():
 
 
 def get_master_branch_name():
-    output = getoutput(['git', 'symbolic-ref', 'refs/remotes/origin/HEAD'])
+    output = getoutput(
+        ['git', 'branch', '-l', 'master', 'main' '--format' '%(refname:short)']
+    ).strip()
     return output.split('/')[-1]
 
 
