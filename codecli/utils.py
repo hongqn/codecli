@@ -18,9 +18,14 @@ def get_current_branch_name():
 
 
 def get_master_branch_name():
-    output = getoutput(
-        ['git', 'branch', '-l', 'master', 'main' '--format' '%(refname:short)']
-    ).strip()
+    output = (
+        getoutput(
+            ['git', 'branch', '-l', 'master', 'main' '--format' '%(refname:short)']
+        )
+        .strip()
+        .lstrip('*')
+        .strip()
+    )
     return output.split('/')[-1]
 
 
