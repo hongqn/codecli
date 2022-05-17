@@ -3,7 +3,7 @@
 import re
 import json
 
-from six.moves.urllib.parse import urlencode
+from six.moves.urllib.parse import urlencode, quote
 from six.moves.urllib.request import urlopen
 
 import codecli.utils as utils
@@ -20,9 +20,9 @@ class GithubProvider(GitServiceProvider):
         url = "https://github.com/%s/compare/%s:%s...%s:%s?expand=1" % (
             head_repo,
             base_user,
-            base_ref,
+            quote(base_ref),
             head_user,
-            head_ref,
+            quote(head_ref),
         )
 
         utils.print_log("goto " + url)
